@@ -15,7 +15,7 @@ export const createMember = (member) => {
         }).then( () => {
             dispatch({ type: 'CREATE_MEMBER', member});
         }).catch( (err) =>{
-            dispatch({ type: 'CREATE_PROJECT_ERROR', err});
+            dispatch({ type: 'CREATE_EVENT_ERROR', err});
         }) 
        
 
