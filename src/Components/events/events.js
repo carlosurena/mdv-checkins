@@ -26,12 +26,12 @@ class Events extends Component {
                     </div>
                 <div className="section container">
                     <div className="row">
-                        <div className="col s12 m6">
+                        <div className="col s12 l6">
                             <h1>Events</h1>
-                        <EventsList events={this.props.events} />
-                        <div id="createEventModal" className="modal modal-fixed-footer">
-                            <CreateEvent />
-                        </div>
+                            <EventsList events={this.props.events} />
+                            <div id="createEventModal" className="modal modal-fixed-footer">
+                                <CreateEvent />
+                            </div>
                         
                         </div>
                     </div>

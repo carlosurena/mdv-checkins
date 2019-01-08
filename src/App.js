@@ -3,6 +3,7 @@ import Members from './Components/members/members.js';
 import Navbar from './Components/navbar/Navbar';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Components/dashboard/Home';
+import Checkins from './Components/checkins/checkins';
 import Member from './Components/members/Member';
 import Events from './Components/events/events';
 import Station from './Components/station/station';
@@ -25,7 +26,7 @@ class App extends Component {
           
           <Navbar />
           <Switch>
-            <Route exact path="/" component={Home}  />
+            <Route exact path="/" component={Checkins}  />
             <Route exact path="/members" component={Members}  />
             <Route exact path="/events" component={Events} />
             <Route exact path="/station" component={Station} />

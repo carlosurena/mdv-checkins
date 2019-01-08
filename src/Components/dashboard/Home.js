@@ -1,5 +1,4 @@
 import React from 'react'
-import Events from '../events/events'
 const Home = () => {
 
     return(
