@@ -24,13 +24,16 @@ class Event extends Component{
                 event: event.data()
             })
             
-            let memberRef = db.collection("members").doc(this.state.event.creatorID)
-            memberRef.get().then( member =>{
-            console.log('member retrieved from firestore', member.data())
-            this.setState({
-                creator : member.data()
-            })
-        })
+            if(this.state.event.creatorID){
+                let memberRef = db.collection("members").doc(this.state.event.creatorID)
+                memberRef.get().then( member =>{
+                console.log('member retrieved from firestore', member.data())
+                this.setState({
+                    creator : member.data()
+                })
+            })}else{
+                console.log("no author");
+            } 
 
         })
 
@@ -65,11 +68,11 @@ class Event extends Component{
                         <div className="col s12 m9 grey lighten-5 details-content">
                            
                                 <Switch>
-                                    <Route exact path={currentPath} render={(props) => <EventStats  id={this.state.id} event={this.state.event}/>} />
-                                    <Route exact path={currentPath+"stats"} render={(props) => <EventStats  id={this.state.id} event={this.state.event}/>} />
-                                    <Route exact path={currentPath+"sections"} render={(props) => <EventSections  id={this.state.id} event={this.state.event}/>} />
-                                    <Route exact path={currentPath+"reports"} render={(props) => <EventReports  id={this.state.id} event={this.state.event}/>} />
-                                    <Route exact path={currentPath+"edit"} render={(props) => <EventEdit  id={this.state.id} event={this.state.event}/>} />
+                                    <Route exact path={currentPath} render={(props) => <EventStats  id={this.state.id} event={this.state.event} creator={this.state.creator}/>} />
+                                    <Route exact path={currentPath+"stats"} render={(props) => <EventStats  id={this.state.id} event={this.state.event} creator={this.state.creator}/>} />
+                                    <Route exact path={currentPath+"sections"} render={(props) => <EventSections  id={this.state.id} event={this.state.event} creator={this.state.creator}/>} />
+                                    <Route exact path={currentPath+"reports"} render={(props) => <EventReports  id={this.state.id} event={this.state.event} creator={this.state.creator}/>} />
+                                    <Route exact path={currentPath+"edit"} render={(props) => <EventEdit  id={this.state.id} event={this.state.event} creator={this.state.creator}/>} />
                                 </Switch>
                                 
                             

@@ -75,10 +75,10 @@ class Members extends Component {
   }
 }
 
-const mapStateToProps = (state) =>{
-  console.log(state)
+const mapStateToProps = (reduxState) =>{
+  console.log(reduxState)
   return {
-      members: state.firestore.ordered.members
+      members: reduxState.firestore.ordered.members
   }
 }
 

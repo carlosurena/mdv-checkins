@@ -2,19 +2,31 @@ import React, {Component} from 'react';
 import {NavLink, Switch, Route, BrowserRouter} from 'react-router-dom'
 import MemberStats from './memberstats'
 import { Select } from 'semantic-ui-react'
+import firebase from '../../firebase/firebase'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firestoreConnect } from 'react-redux-firebase'
+
+//var db = firebase.firestore();
 class Member extends Component{
 
     state = {
-        id: null,
-        member: {"first_name": 'Carlos', "last_name": "Urena", "email":"carlosurenajr@gmail.com", "gender":"M", "phone": "2035227369", "dob" : "", "type": "Active", "createdOn": "", "updatedOn": "" },
+        
     }
     componentDidMount(){
-        let id = this.props.match.params.member_id;
-        console.log(this.props)
-        console.log(id)
-        this.setState({
-            id : id
-        })
+        // let id = this.props.match.params.member_id;
+        // console.log(id)
+        // var memberRef = db.collection("members").doc(id);
+        // memberRef.get().then( member =>{
+        //     console.log('member retrieved from firestore', member.data())
+        //     this.setState({
+        //         id : id,
+        //         member: member.data()
+        //     })
+            
+            
+
+        // })
     }
 
     handleDropdownChange = (e) => {
@@ -25,21 +37,25 @@ class Member extends Component{
 
     render(){
         const currentPath = "/member/" + this.state.id + "/";
+        const memberID = this.props.match.params.member_id;
+        const memberData = this.props.member
+        
+        console.log(memberData)
         const membershipOptions = [
             {key: 'Visitor', value: 'Visitor', text: 'Visitor', text_esp: 'Visita'},
             {key: 'RegularVisitor', value: 'RegularVisitor', text: 'Regular Visitor', text_esp: 'Visita Regular'},
             {key: 'Passive', value: 'Passive', text: 'Passive Member', text_esp: 'Miembro Pasivo'},
             {key: 'Active', value: 'Active', text: 'Active Member', text_esp: 'Miembro Activo'} ]
-        const member = this.state.member ? (
+        const member = memberData ? (
             <div className="">
                 <div className="section green">
                     <div className="row valign-wrapper">
                         <div className="col s12 m4">
-                            <h3>{this.state.member.first_name + " " + this.state.member.last_name}</h3>
+                            <h3>{memberData[memberID].first_name + " " + memberData[memberID].last_name}</h3>
                         </div>
                         <div className="col s12 m8">
                             <div className="valign-wrapper">
-                               <Select placeholder='Membership Type' options={membershipOptions} value={this.state.member.type}>
+                               <Select placeholder='Membership Type' options={membershipOptions} value={memberData[memberID].type}>
 
                                </Select>
                                 
@@ -83,7 +99,7 @@ class Member extends Component{
                 
             </div>
         ) : (
-            <div className="center">Could not find the requested member (member ID {this.state.id})...</div>
+            <div className="center">Could not find the requested member (member ID: {this.props.match.params.member_id})...</div>
             )
         return(
             <BrowserRouter>
@@ -95,4 +111,19 @@ class Member extends Component{
         );
     }
 }
-export default Member
+
+const mapStateToProps = (reduxState) =>{
+    console.log("redux state",reduxState)
+    return {
+        member : reduxState.firestore.data.members
+    }
+}
+export default compose(
+    connect(mapStateToProps), 
+    firestoreConnect(props =>[
+        {
+            collection: 'members',
+            doc: props.match.params.member_id
+        }
+    ])
+    )(Member)
