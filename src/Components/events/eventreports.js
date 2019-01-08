@@ -13,7 +13,7 @@ class EventReports extends Component {
                 </div>
                 <div className="card-action grey lighten-4 grey-text">
                     <div>Created By John</div>
-                    <div>{this.props.event.createdOn}</div>
+                    <div></div>
                 </div>
             </div>
         </div>

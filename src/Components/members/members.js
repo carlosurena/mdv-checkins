@@ -61,7 +61,7 @@ class Members extends Component {
           <MembersTable deleteMember={this.deleteMember} members = {members} />
         
         </div>
-       <AddMember addMember = {this.addMember}/>
+       <AddMember />
 
       </div>
        

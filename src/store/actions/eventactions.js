@@ -11,7 +11,7 @@ export const createEvent = (event) => {
             createdOn: new Date(),
             updatedOn: new Date()
         }).then( () => {
-            dispatch({ type: 'CREATE_EVENTS', member});
+            dispatch({ type: 'CREATE_EVENT', event});
         }).catch( (err) =>{
             dispatch({ type: 'CREATE_EVENT_ERROR', err});
         }) 

@@ -4,6 +4,8 @@ import EventsList from './eventslist';
 import CreateEvent from './createEvent';
 import M from "materialize-css";
 import { connect } from 'react-redux'
+import { firestoreConnect } from 'react-redux-firebase'
+import { compose } from 'redux'
 
 class Events extends Component {
     state = {
@@ -29,9 +31,9 @@ class Events extends Component {
                         <div className="col s12 l6">
                             <h1>Events</h1>
                             <EventsList events={this.props.events} />
-                            <div id="createEventModal" className="modal modal-fixed-footer">
-                                <CreateEvent />
-                            </div>
+                            
+                            <CreateEvent />
+                            
                         
                         </div>
                     </div>
@@ -42,9 +44,17 @@ class Events extends Component {
         )
     }
 }
+
 const mapStateToProps = (state) =>{
+    console.log(state)
     return {
-        events: state.event.events
+        events: state.firestore.ordered.events
     }
-}
-export default connect(mapStateToProps )(Events)
+  }
+  
+  export default compose(
+    connect(mapStateToProps), 
+    firestoreConnect([
+      {collection: 'events'}
+    ])
+    )(Events);

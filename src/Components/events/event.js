@@ -4,21 +4,38 @@ import EventSections from './eventsections';
 import EventReports from './eventreports';
 import EventEdit from './eventedit';
 import {NavLink, Route, Switch, BrowserRouter} from 'react-router-dom';
+import firebase from '../../firebase/firebase'
 
+var db = firebase.firestore();
 class Event extends Component{
 
     state = {
         id: null,
-        event:{ id: 3, title: "Manantiales de vida", type: "recurring", startDate: "2/4/2019", endDate: "2/72019", createdOn : "12/30/2018", creatorID : 23254 }
-        
+        event: null,
+        creator: null
     }
     componentDidMount(){
         let id = this.props.match.params.event_id;
-        console.log(this.props)
-        console.log(id)
-        this.setState({
-            id : id
+        var eventRef = db.collection("events").doc(id);
+        eventRef.get().then( event =>{
+            console.log('event retrieved from firestore', event.data())
+            this.setState({
+                id : id,
+                event: event.data()
+            })
+            
+            let memberRef = db.collection("members").doc(this.state.event.creatorID)
+            memberRef.get().then( member =>{
+            console.log('member retrieved from firestore', member.data())
+            this.setState({
+                creator : member.data()
+            })
         })
+
+        })
+
+        
+        
     }
     render(){
         const currentPath = "/event/" + this.state.id + "/";

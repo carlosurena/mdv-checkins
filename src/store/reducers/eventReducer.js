@@ -11,7 +11,16 @@ const initState = {
 };
 
 const eventReducer = (state = initState, action ) => {
-    return state
-}
+    switch (action.type){
+        case 'CREATE_EVENT':
+            console.log("created member", action.member);
+            return state;
+        case 'CREATE_EVENT_ERROR':
+            console.log("There was en error creating a member", action.error);
+            return state;
+        default:
+            return state;
 
+    }
+}
 export default eventReducer
