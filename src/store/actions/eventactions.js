@@ -19,3 +19,24 @@ export const createEvent = (event) => {
 
     }
 }
+
+export const updateEvent = (event) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+
+        const firestore = getFirestore();
+        firestore.collection('events').doc(event.id).set({
+            title: event.title,
+            isRecurring: event.isRecurring,
+            weekday: event.weekday,
+            eventTime: event.eventTime,
+            updatedOn: new Date()
+        }).then( () => {
+            dispatch({ type: 'UPDATE_EVENT', event});
+        }).catch( (err) =>{
+            dispatch({ type: 'UPDATE_EVENT_ERROR', err});
+        }) 
+       
+
+    }
+}

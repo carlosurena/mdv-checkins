@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {NavLink, Switch, Route, BrowserRouter} from 'react-router-dom'
 import MemberStats from './memberstats'
 import { Select } from 'semantic-ui-react'
-import firebase from '../../firebase/firebase'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
@@ -11,22 +10,15 @@ import { firestoreConnect } from 'react-redux-firebase'
 class Member extends Component{
 
     state = {
-        
+        first_name:'',
+        last_name:'',
+        dob:'',
+        gender:'',
+        phone:'',
+        type:''
     }
     componentDidMount(){
-        // let id = this.props.match.params.member_id;
-        // console.log(id)
-        // var memberRef = db.collection("members").doc(id);
-        // memberRef.get().then( member =>{
-        //     console.log('member retrieved from firestore', member.data())
-        //     this.setState({
-        //         id : id,
-        //         member: member.data()
-        //     })
-            
-            
-
-        // })
+        
     }
 
     handleDropdownChange = (e) => {
@@ -36,28 +28,21 @@ class Member extends Component{
     }
 
     render(){
-        const currentPath = "/member/" + this.state.id + "/";
         const memberID = this.props.match.params.member_id;
-        const memberData = this.props.member
+        const currentPath = "/member/" + memberID + "/";
+        const { member} = this.props
         
-        console.log(memberData)
-        const membershipOptions = [
-            {key: 'Visitor', value: 'Visitor', text: 'Visitor', text_esp: 'Visita'},
-            {key: 'RegularVisitor', value: 'RegularVisitor', text: 'Regular Visitor', text_esp: 'Visita Regular'},
-            {key: 'Passive', value: 'Passive', text: 'Passive Member', text_esp: 'Miembro Pasivo'},
-            {key: 'Active', value: 'Active', text: 'Active Member', text_esp: 'Miembro Activo'} ]
-        const member = memberData ? (
+        console.log('member props',this.props)
+        const memberRender = member ? (
             <div className="">
                 <div className="section green">
                     <div className="row valign-wrapper">
                         <div className="col s12 m4">
-                            <h3>{memberData[memberID].first_name + " " + memberData[memberID].last_name}</h3>
+                            <h3>{member.first_name + " " + member.last_name}</h3>
                         </div>
                         <div className="col s12 m8">
                             <div className="valign-wrapper">
-                               <Select placeholder='Membership Type' options={membershipOptions} value={memberData[memberID].type}>
-
-                               </Select>
+                               
                                 
                             </div>
                             
@@ -72,7 +57,7 @@ class Member extends Component{
                                     <i className="material-icons prefix">create</i>
                                     <span> Information</span>
                                 </li></NavLink>
-                                <NavLink to={currentPath+"sections"}><li className="valign-wrapper">
+                                <NavLink to={currentPath+"checkins"}><li className="valign-wrapper">
                                     <i className="material-icons prefix">access_time</i>
                                     <span> Check-Ins</span>
                                 </li></NavLink>
@@ -85,11 +70,10 @@ class Member extends Component{
                         </div>
                         <div className="col s12 m9 grey lighten-5 details-content">
                                 <Switch>
-                                    <Route exact path={currentPath} render={(props) => <MemberStats  id={this.state.id} member={this.state.member}/>} />
-                                    <Route exact path={currentPath+"stats"} render={(props) => <MemberStats  id={this.state.id} member={this.state.member}/>} />
-                                    <Route exact path={currentPath+"sections"} render={(props) => <MemberStats  id={this.state.id} member={this.state.member}/>} />
-                                    <Route exact path={currentPath+"reports"} render={(props) => <MemberStats  id={this.state.id} member={this.state.member}/>} />
-                                    <Route exact path={currentPath+"edit"} render={(props) => <MemberStats  id={this.state.id} member={this.state.member}/>} />
+                                    <Route exact path={currentPath} component={MemberStats} />
+                                    <Route exact path={currentPath+"stats"} component={MemberStats} />
+                                    <Route exact path={currentPath+"checkins"} component={MemberStats}  />
+                                    <Route exact path={currentPath+"reports"}  component={MemberStats} />
                                 </Switch>
                                 
                             
@@ -104,7 +88,7 @@ class Member extends Component{
         return(
             <BrowserRouter>
                 <div>
-                    {member}
+                    {memberRender}
                 </div>
                     
                 </BrowserRouter>
@@ -112,18 +96,20 @@ class Member extends Component{
     }
 }
 
-const mapStateToProps = (reduxState) =>{
+const mapStateToProps = (reduxState,ownProps) =>{
     console.log("redux state",reduxState)
+    const id = ownProps.match.params.member_id;
+    const members = reduxState.firestore.data.members;
+    const member = members ? members[id] : null
     return {
-        member : reduxState.firestore.data.members
+        member : member
     }
 }
 export default compose(
     connect(mapStateToProps), 
     firestoreConnect(props =>[
         {
-            collection: 'members',
-            doc: props.match.params.member_id
+            collection: 'members'
         }
     ])
     )(Member)

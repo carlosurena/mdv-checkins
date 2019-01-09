@@ -21,7 +21,7 @@ const MembersTable = ({members, deleteMember}) => {
                     { members && members.map(member => {
                         return (
                             <tr className="member" key= {member.id}>
-                                <td> <Link to={"/members/"+member.id}>{member.first_name + " " + member.last_name} </Link> </td>
+                                <td> <Link to={"/member/"+member.id}>{member.first_name + " " + member.last_name} </Link> </td>
                                 <td className="hide-on-small-only">{(new Date(member.dob.toDate()).toLocaleString().split(",")[0]) } </td>
                                 <td  className="hide-on-med-and-down">{member.gender} </td>
                                 <td>{member.phone} </td>

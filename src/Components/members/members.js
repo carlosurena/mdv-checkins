@@ -9,8 +9,8 @@ import { compose } from 'redux'
 
 class Members extends Component {
   state = {
-    
-   
+
+
   }
   componentDidMount() {
     // Auto initialize all the things!
@@ -18,7 +18,7 @@ class Members extends Component {
   }
   addMember = (member) => {
     member.id = Math.random();
-    
+
     let newMemberList = [...this.state.members, member];
     console.log(newMemberList);
     this.setState(prevState => ({
@@ -31,60 +31,53 @@ class Members extends Component {
     let members = this.state.members.filter(member => {
       return member.id !== id
     });
-    
+
     this.setState({
       members: members
     })
   }
 
-  handleModal = (e) =>{
-   
+  handleModal = (e) => {
+
   }
   render() {
-    const {members} = this.props
+    const { members } = this.props
     console.log(members)
     return (
       <div className="members-page">
         <div className="section green">
           <div className="row container">
             <button data-target="addMemberModal" className="btn modal-trigger right waves-effect" onClick={this.handleModal}>
-            <i className="material-icons">person_add</i>
-            <p>New Member</p>
+              <i className="material-icons">person_add</i>
+              <p>New Member</p>
             </button>
 
           </div>
         </div>
-        
-      <div className="section">
-        <div className="container">
-          <SearchMember />
-          <MembersTable deleteMember={this.deleteMember} members = {members} />
-        
-        </div>
-       <AddMember />
 
-      </div>
-       
-       
-        
-        
-      
-       
+        <div className="section">
+          <div className="container">
+            <SearchMember />
+            <MembersTable deleteMember={this.deleteMember} members={members} />
+          </div>
+          <AddMember />
+
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (reduxState) =>{
+const mapStateToProps = (reduxState) => {
   console.log(reduxState)
   return {
-      members: reduxState.firestore.ordered.members
+    members: reduxState.firestore.ordered.members
   }
 }
 
 export default compose(
-  connect(mapStateToProps), 
+  connect(mapStateToProps),
   firestoreConnect([
-    {collection: 'members'}
+    { collection: 'members' }
   ])
-  )(Members);
+)(Members);

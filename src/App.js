@@ -32,7 +32,7 @@ class App extends Component {
             <Route exact path="/station" component={Station} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
-            <Route path="/members/:member_id" component={Member} />
+            <Route path="/member/:member_id" component={Member} />
             <Route path="/event/:event_id" component={Event} />
           </Switch>
         </div>

@@ -21,3 +21,24 @@ export const createMember = (member) => {
 
     }
 }
+
+export const updateMember = (member) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+
+        const firestore = getFirestore();
+        firestore.collection('members').doc(member.id).set({
+            first_name: member.fname,
+            last_name: member.lname,
+            dob: new Date(member.dob+ " 00:00"),
+            gender: member.gender,
+            phone: member.phone,
+            type: member.type,
+            updatedOn: new Date()
+        }).then( () => {
+            dispatch({ type: 'UPDATE_MEMBER', member});
+        }).catch( (err) =>{
+            dispatch({ type: 'UPDATE_MEMBER_ERROR', err});
+        }) 
+    }
+}

@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import firebase from '../../firebase/firebase'
-
 class SearchMember extends Component {
 
     state = {

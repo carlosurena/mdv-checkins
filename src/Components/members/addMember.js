@@ -116,6 +116,7 @@ class AddMember extends Component {
                             <select id="type" onChange={this.handleDropdownChange}>
                                 <option value="" disabled selected>Choose a type</option>
                                 <option value="Visitor">Visitor</option>
+                                <option value="RegularVisitor">Regular Visitor</option>
                                 <option value="Passive">Passive Member</option>
                                 <option value="Active">Active Member</option>
                             </select>
