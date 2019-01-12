@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Search, Grid, Header, Segment,Label } from 'semantic-ui-react'
-import {searchMembers } from '../../store/actions/memberactions'
+import {Search, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import faker from 'faker'
@@ -33,7 +32,7 @@ resultRenderer.propTypes = {
 
   }
 
-class SearchMember extends Component {
+class StationSearch extends Component {
 
     state = {
         value: '',
@@ -121,4 +120,4 @@ class SearchMember extends Component {
   }
 }
 
-export default (SearchMember)
+export default (StationSearch)

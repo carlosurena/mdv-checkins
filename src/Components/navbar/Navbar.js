@@ -1,30 +1,46 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Link, NavLink } from 'react-router-dom'
+import {connect} from 'react-redux'
+import SignedInLinks from './SignedInLinks'
+import SignedOutLinks from './SignedOutLinks'
+import { logOut } from '../../store/actions/authActions'
 
-const Navbar = () => {
-    return(
-        <div>
-            <nav className="nav-wrapper green lighten-1">
-                <div className="container">
-                <a href="#" data-target="mobile-nav" className="sidenav-trigger"><i className="material-icons">menu</i></a>
-                    <ul className="right hide-on-med-and-down">
-                        <li><NavLink to="/">Check-In</NavLink></li>
-                        <li><NavLink to="/members">Members</NavLink></li>
-                        <li><NavLink to="/events">Events</NavLink></li>
-                        <li><NavLink to="/account">Account</NavLink></li>
-                    </ul>
-                </div>
-            </nav>
+class Navbar extends Component{
+    
+    state = {
 
-            <ul className="sidenav" id="mobile-nav">
-            <li><NavLink to="/">Check-In</NavLink></li>
-                <li><NavLink to="/members">Members</NavLink></li>
-                <li><NavLink to="/events">Events</NavLink></li>
-                <li><NavLink to="/account">Account</NavLink></li>
-            </ul>
-            
-        </div>
-    )
+    }
+    render(){
+        return(
+            <div>
+                {
+                    this.props.user.isEmpty ? (
+                        <SignedOutLinks />
+                    ):(
+                        <SignedInLinks logOut={this.props.logOut} />
+                    )
+                }
+                
+                
+            </div>
+        )
+    }
+    
 }
 
-export default Navbar
+const mapStateToProps = (reduxState) =>{
+    console.log('redux state',reduxState)
+
+    return{
+        user: reduxState.firebase.auth
+    }
+}
+const mapDispatchToProps = (dispatch) =>{
+    console.log('redux state',dispatch)
+
+    return{
+        logOut : () => dispatch(logOut())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar)

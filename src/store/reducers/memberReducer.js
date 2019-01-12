@@ -22,6 +22,18 @@ const memberReducer = (state = initState, action) => {
         case 'UPDATE_MEMBER_ERROR':
             console.log("There was en error updating a member", action.error);
             return state;
+        case 'DELETE_MEMBER':
+            console.log('member deleted:', action.id);
+            return state;
+        case 'DELETE_MEMBER_ERROR':
+            console.log("There was en error deleting a member", action.error);
+            return state;
+        case 'SEARCH_MEMBER':
+            console.log('member search complete', action.query);
+            return state;
+        case 'SEARCH_MEMBER_ERROR':
+            console.log("There was en error finding the member", action.error);
+            return state;
         default:
             return state;
 

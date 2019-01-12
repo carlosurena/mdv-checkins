@@ -88,7 +88,7 @@ class MemberStats extends Component {
                 </div>
                 <div className="input-field">
                   <label className='active' htmlFor="dob">Birthdate</label>
-                  <input type="date" id="dob" defaultValue={(new Date(member.dob.toDate()).toLocaleString().split(",")[0])} onChange={this.handleInputChange} />
+                  <input type="date" id="dob" defaultValue={(new Date(member.dob.toDate()))} onChange={this.handleInputChange} />
                 </div>
 
                 <div className="input-field col s6 valign-wrapper">

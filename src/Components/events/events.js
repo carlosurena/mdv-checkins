@@ -6,6 +6,7 @@ import M from "materialize-css";
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
+import { Redirect } from 'react-router-dom'
 
 class Events extends Component {
     state = {
@@ -18,6 +19,8 @@ class Events extends Component {
         M.AutoInit();
     }
     render(){
+        const {user } = this.props
+        if(user.isEmpty) return <Redirect to='/signin' />
         return(
             <div className="">
                 <div className="section green">
@@ -45,10 +48,11 @@ class Events extends Component {
     }
 }
 
-const mapStateToProps = (state) =>{
-    console.log(state)
+const mapStateToProps = (reduxState) =>{
+    console.log(reduxState)
     return {
-        events: state.firestore.ordered.events
+        events: reduxState.firestore.ordered.events,
+        user: reduxState.firebase.auth
     }
   }
   

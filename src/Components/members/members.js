@@ -6,6 +6,7 @@ import M from "materialize-css";
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
+import {Redirect} from 'react-router-dom'
 
 class Members extends Component {
   state = {
@@ -41,8 +42,9 @@ class Members extends Component {
 
   }
   render() {
-    const { members } = this.props
-    console.log(members)
+    const { members, user } = this.props
+    if(user.isEmpty) return <Redirect to='/signin' />
+    
     return (
       <div className="members-page">
         <div className="section green">
@@ -57,7 +59,7 @@ class Members extends Component {
 
         <div className="section">
           <div className="container">
-            <SearchMember />
+            <SearchMember members={members} />
             <MembersTable deleteMember={this.deleteMember} members={members} />
           </div>
           <AddMember />
@@ -69,9 +71,10 @@ class Members extends Component {
 }
 
 const mapStateToProps = (reduxState) => {
-  console.log(reduxState)
+  console.log('reduxstate',reduxState)
   return {
-    members: reduxState.firestore.ordered.members
+    members: reduxState.firestore.ordered.members,
+    user: reduxState.firebase.auth
   }
 }
 

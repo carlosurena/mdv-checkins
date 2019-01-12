@@ -3,8 +3,9 @@ import EventStats from './eventstats';
 import EventSections from './eventsections';
 import EventReports from './eventreports';
 import EventEdit from './eventedit';
-import {NavLink, Route, Switch, BrowserRouter} from 'react-router-dom';
+import {NavLink, Route, Switch, BrowserRouter, Redirect} from 'react-router-dom';
 import firebase from '../../firebase/firebase'
+import { connect } from 'react-redux'
 
 var db = firebase.firestore();
 class Event extends Component{
@@ -41,6 +42,9 @@ class Event extends Component{
         
     }
     render(){
+        const {user } = this.props
+        if(user.isEmpty) return <Redirect to='/signin' />
+
         const currentPath = "/event/" + this.state.id + "/";
         const event = this.state.event ? (
             <div className="">
@@ -96,4 +100,10 @@ class Event extends Component{
         );
     }
 }
-export default Event
+
+const mapStateToProps = (reduxState) =>{
+    return {
+        user : reduxState.firebase.auth
+    }
+}
+export default connect(mapStateToProps)(Event)

@@ -3,12 +3,14 @@ import eventReducer from './eventReducer';
 import memberReducer from './memberReducer';
 import {combineReducers} from 'redux'
 import { firestoreReducer } from 'redux-firestore'
+import { firebaseReducer } from 'react-redux-firebase'
 
 const rootReducer = combineReducers({
     auth: authReducer,
     event: eventReducer,
     member: memberReducer,
-    firestore: firestoreReducer
+    firestore: firestoreReducer,
+    firebase: firebaseReducer,
 });
 
 export default rootReducer

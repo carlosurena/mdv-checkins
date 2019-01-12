@@ -1,24 +1,30 @@
 import React, {Component} from 'react';
-import {NavLink, Switch, Route, BrowserRouter} from 'react-router-dom'
+import {NavLink, Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
 import MemberStats from './memberstats'
-import { Select } from 'semantic-ui-react'
+import { Select,Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
+import { deleteMember } from '../../store/actions/memberactions';
 
 //var db = firebase.firestore();
 class Member extends Component{
 
     state = {
+        id:'',
         first_name:'',
         last_name:'',
         dob:'',
         gender:'',
         phone:'',
-        type:''
+        type:'',
+        toMembers : false
     }
     componentDidMount(){
-        
+        this.setState({
+
+            id: this.props.match.params.member_id
+        })
     }
 
     handleDropdownChange = (e) => {
@@ -27,7 +33,22 @@ class Member extends Component{
         })
     }
 
+    handleDeleteMember = (e) =>{
+        console.log('deleting member', this.props);
+        this.props.deleteMember(this.state.id)
+            this.setState({
+                toMembers: true
+            })
+        
+        
+
+    }
     render(){
+        const { user } = this.props
+        if(user.isEmpty) return <Redirect to='/signin' />
+        if(this.state.toMembers === true){
+            return <Redirect to='/members'/>
+        }
         const memberID = this.props.match.params.member_id;
         const currentPath = "/member/" + memberID + "/";
         const { member} = this.props
@@ -43,7 +64,7 @@ class Member extends Component{
                         <div className="col s12 m8">
                             <div className="valign-wrapper">
                                
-                                
+                            <Button primary color='red' onClick={this.handleDeleteMember} content='Delete Member' />
                             </div>
                             
                         </div> 
@@ -102,11 +123,21 @@ const mapStateToProps = (reduxState,ownProps) =>{
     const members = reduxState.firestore.data.members;
     const member = members ? members[id] : null
     return {
-        member : member
+        member : member,
+        user : reduxState.firebase.auth
+        
+
     }
 }
+
+const mapDispatchToProps = (dispatch) =>{
+    return {
+        deleteMember: (member) => dispatch(deleteMember(member))
+        }
+}
+
 export default compose(
-    connect(mapStateToProps), 
+    connect(mapStateToProps,mapDispatchToProps), 
     firestoreConnect(props =>[
         {
             collection: 'members'

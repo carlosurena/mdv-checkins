@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
-const MembersTable = ({members, deleteMember}) => {
+const MembersTable = ({members}) => {
 
     //const {member} = this.props;
     console.log(members);

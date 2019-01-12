@@ -27,7 +27,7 @@ export const updateMember = (member) => {
         //make async call to database
 
         const firestore = getFirestore();
-        firestore.collection('members').doc(member.id).set({
+        firestore.collection('members').doc(member.id).update({
             first_name: member.fname,
             last_name: member.lname,
             dob: new Date(member.dob+ " 00:00"),
@@ -39,6 +39,32 @@ export const updateMember = (member) => {
             dispatch({ type: 'UPDATE_MEMBER', member});
         }).catch( (err) =>{
             dispatch({ type: 'UPDATE_MEMBER_ERROR', err});
+        }) 
+    }
+}
+
+export const deleteMember = (id) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+
+        const firestore = getFirestore();
+        firestore.collection('members').doc(id).delete().then( () => {
+            dispatch({ type: 'DELETE_MEMBER', id});
+        }).catch( (err) =>{
+            dispatch({ type: 'DELETE_MEMBER_ERROR', err});
+        }) 
+    }
+}
+
+export const searchMembers = (query) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+
+        const firestore = getFirestore();
+        firestore.collection('members').where('first_name', '>=', query).then( () => {
+            dispatch({ type: 'SEARCH_MEMBER', query});
+        }).catch( (err) =>{
+            dispatch({ type: 'SEARCH_MEMBER_ERROR', err});
         }) 
     }
 }

@@ -1,56 +1,57 @@
 import React, { Component } from 'react'
+import firebase,{auth} from '../../firebase/firebase';
+import {connect} from 'react-redux'
+import {loginGoogle,loginFacebook} from '../../store/actions/authActions'
+import {Redirect} from 'react-router-dom'
 
 class SignIn extends Component {
 
-    state = {
-        email : '',
-        password:'',
-    }
-    handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(this.state);
-    }
+    
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-        
-    }
   render() {
+    const { user } = this.props
+    if(!user.isEmpty) return <Redirect to='/' />
     return (
       <div className='container'>
-        <form onSubmit={this.handleSubmit} className="white">
-            <h5 className="grey-text text-darken-3">Sign In</h5>
-            <div className="input-field">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" onChange={this.handleChange}/>
-            </div>
-            <div className="input-field">
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" onChange={this.handleChange}/>
-            </div>
-            <div className="input-field center">
-                <button className="btn pink lighten-1 z-depth-0">
-                    Login
-                </button>
-                
-            </div>
-        </form>
+        
         <div className="center">
-            <button className="btn blue darken-3 z-depth-0">
+            <button onClick={this.props.loginFacebook} className="btn blue darken-3 z-depth-0">
                         Login with Facebook
             </button>
         </div>
        
         <div className="center">
-            <button className="btn red lighten-1 z-depth-0">
+            <button onClick={this.props.loginGoogle} className="btn red lighten-1 z-depth-0">
                         Login with Google
             </button>
         </div>
+
+        
+            {this.props.authError ? (
+                null
+                ):(
+                    <div className="centered">
+                        <p>{this.props.authError}</p>
+                        
+                    </div>
+                )}
+
+        
       </div>
     )
   }
 }
 
-export default SignIn
+const mapStateToProps = (reduxState) =>{
+    return{
+        authError : reduxState.auth.authError,
+        user : reduxState.firebase.auth
+    }
+}
+const mapDispatchToProps = (dispatch) =>{
+    return{
+        loginGoogle : () => dispatch(loginGoogle()),
+        loginFacebook : () => dispatch(loginFacebook())
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SignIn)
