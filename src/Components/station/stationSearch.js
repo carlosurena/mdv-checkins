@@ -40,7 +40,6 @@ class StationSearch extends Component {
         results: [],
         toMember: false,
         selectedID : ''
-
     }
 
     resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
@@ -87,7 +86,8 @@ class StationSearch extends Component {
                 age: Math.abs(new Date(Date.now() - members[index].dob.toDate().getTime()).getUTCFullYear() - 1970) + "yo",
                 key: members[index].id
               }))
-        ):(null
+        ):(
+            null
           )
            
         }

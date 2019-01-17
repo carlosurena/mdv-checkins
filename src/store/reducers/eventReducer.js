@@ -16,13 +16,24 @@ const eventReducer = (state = initState, action) => {
             console.log("created event", action.event);
             return state;
         case 'CREATE_EVENT_ERROR':
-            console.log("There was en error creating a event", action.error);
+            console.log("There was an error creating a event", action.error);
             return state;
         case 'UPDATE_EVENT':
             console.log('event updated:', action.event);
             return state;
         case 'UPDATE_EVENT_ERROR':
-            console.log("There was en error updating a event", action.error);
+            console.log("There was an error updating a event", action.error);
+            return state;
+        case 'DELETE_EVENT':
+            console.log('event deleted:', action.event);
+            return state;
+        case 'DELETE_EVENT_ERROR':
+            console.log("There was an error deleting an event", action.error);
+        case 'CREATE_LOCATION':
+            console.log('location created:', action.location);
+            return state;
+        case 'CREATE_LOCATION_ERROR':
+            console.log("There was an error creating a location", action.error);
             return state;
         default:
             return state;

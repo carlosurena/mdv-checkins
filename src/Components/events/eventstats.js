@@ -14,8 +14,8 @@ class EventStats extends Component {
                 <div className="card-action grey lighten-4 grey-text">
                     <div> 
                       { 
-                      (this.props.creator) 
-                      ? ("Created By "+ this.props.creator.first_name + " " + this.props.creator.last_name) 
+                      (this.props.event.creatorName) 
+                      ? ("Created By "+ this.props.event.creatorName) 
                       : ("Creator not found")
                       }</div>
                     <div>{}</div>

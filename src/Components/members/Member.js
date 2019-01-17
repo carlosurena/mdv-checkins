@@ -18,7 +18,7 @@ class Member extends Component{
         gender:'',
         phone:'',
         type:'',
-        toMembers : false
+        memberDeleted : false
     }
     componentDidMount(){
         this.setState({
@@ -37,7 +37,7 @@ class Member extends Component{
         console.log('deleting member', this.props);
         this.props.deleteMember(this.state.id)
             this.setState({
-                toMembers: true
+                memberDeleted: true
             })
         
         
@@ -46,7 +46,7 @@ class Member extends Component{
     render(){
         const { user } = this.props
         if(user.isEmpty) return <Redirect to='/signin' />
-        if(this.state.toMembers === true){
+        if(this.state.memberDeleted === true){
             return <Redirect to='/members'/>
         }
         const memberID = this.props.match.params.member_id;

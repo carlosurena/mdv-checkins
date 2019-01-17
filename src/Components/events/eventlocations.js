@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import M from 'materialize-css';
+import {Button} from 'semantic-ui-react'
 
-class EventSections extends Component {
+class EventLocations extends Component {
  state = {
    sections: [ "Eyri", 'Jovenes', 'Beatriz', 'Karla', 'Orlando', 'Marcela']
 
@@ -15,8 +16,12 @@ class EventSections extends Component {
     return (
       <div>
         <div className="container section">
-            <h4>SECTIONS</h4>
+            <h4>Locations</h4>
+            <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
             <div className="row">
+              <div>
+                {this.props.event.locations ? ('there are locations!') : ('no locations..')}
+              </div>
                 <div className="col s12">
                     <ul className="tabs">
                         <li className="tab col s3"><a href="#test1">Test 1</a></li>
@@ -36,4 +41,4 @@ class EventSections extends Component {
   }
 }
 
-export default EventSections
+export default EventLocations 

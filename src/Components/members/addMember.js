@@ -113,8 +113,8 @@ class AddMember extends Component {
                             <label htmlFor="phone">Phone Number</label>
                         </div> 
                         <div className="input-field col s6">
-                            <select id="type" onChange={this.handleDropdownChange}>
-                                <option value="" disabled selected>Choose a type</option>
+                            <select id="type" value='' onChange={this.handleDropdownChange}>
+                                <option value="" disabled >Choose a type</option>
                                 <option value="Visitor">Visitor</option>
                                 <option value="RegularVisitor">Regular Visitor</option>
                                 <option value="Passive">Passive Member</option>

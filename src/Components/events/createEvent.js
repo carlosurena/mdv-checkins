@@ -49,7 +49,7 @@ class CreateEvent extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log("submiting ",this.state)
-        this.props.createEvent(this.state);
+        this.props.createEvent(this.state,this.props.user);
         this.setState({
             title:'',
             isRecurring: false,
@@ -172,7 +172,13 @@ class CreateEvent extends Component {
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        createEvent: (event) => dispatch(createEvent(event))
+        createEvent: (event,user) => dispatch(createEvent(event,user))
     }
 }
-export default connect(null, mapDispatchToProps)(CreateEvent);
+
+const mapStateToProps = (reduxState) =>{
+    return {
+        user : reduxState.firebase.auth
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CreateEvent);

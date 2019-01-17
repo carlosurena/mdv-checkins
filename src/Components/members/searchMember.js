@@ -85,7 +85,7 @@ class SearchMember extends Component {
                 name: members[index].first_name +" "+ members[index].last_name,
                 phone: members[index].phone,
                 image: faker.internet.avatar(),
-                age: Math.abs(new Date(Date.now() - members[index].dob.toDate().getTime()).getUTCFullYear() - 1970) + "yo",
+                age: Math.abs(new Date(Date.now() - members[index].dob.toDate().getTime()).getUTCFullYear() - 1970) + " años",
                 key: members[index].id
               }))
         ):(null
