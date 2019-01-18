@@ -12,28 +12,35 @@ class EventLocations extends Component {
   M.AutoInit();
 }
   render() {
-    //const sectionTabs = 
+    const {locations,event} = this.props
+    console.log(locations)
     return (
       <div>
         <div className="container section">
             <h4>Locations</h4>
             <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
             <div className="row">
-              <div>
-                {this.props.event.locations ? ('there are locations!') : ('no locations..')}
-              </div>
+              
                 <div className="col s12">
                     <ul className="tabs">
-                        <li className="tab col s3"><a href="#test1">Test 1</a></li>
-                        <li className="tab col s3"><a className="active" href="#test2">Test 2</a></li>
-                        <li className="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
-                        <li className="tab col s3"><a href="#test4">Test 4</a></li>
+                    {locations && locations.map(location =>{
+                      return(
+                        
+                        <li key={location.id} className="tab col s3"><a href={"#"+location.id}>{location.title}</a></li>
+                      )
+                    })}
+                        
                     </ul>
                 </div>
-                <div id="test1" className="col s12">Test 1</div>
-                <div id="test2" className="col s12">Test 2</div>
-                <div id="test3" className="col s12">Test 3</div>
-                <div id="test4" className="col s12">Test 4</div>
+                <div>
+                {locations && locations.map(location =>{
+                      return(
+                        
+                        <div key={location.id} id={location.id} className="col s12"> CONTENT FOR {location.title}</div>)
+                    })}
+                  
+                </div>
+                
             </div>
         </div>
       </div>

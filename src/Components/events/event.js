@@ -97,7 +97,7 @@ class Event extends Component{
                                 <Switch>
                                     <Route exact path={currentPath} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
                                     <Route exact path={currentPath+"stats"} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
-                                    <Route exact path={currentPath+"locations"} render={() => <EventLocations  id={this.state.id} event={this.props.event} creator={this.state.creator}  handleCreateLocation= {() =>{this.handleCreateLocation()}}/>} />
+                                    <Route exact path={currentPath+"locations"} render={() => <EventLocations  id={this.state.id} event={this.props.event} creator={this.state.creator} locations={this.props.locations} handleCreateLocation= {() =>{this.handleCreateLocation()}}/>} />
                                     <Route exact path={currentPath+"reports"} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
                                 </Switch>
                                 
@@ -125,14 +125,15 @@ class Event extends Component{
 
 const mapStateToProps = (reduxState, ownProps) =>{
     const id = ownProps.match.params.event_id;
-    const events = reduxState.firestore.data.events;
-    const event = events ? events[id] : null
-    //const locations = reduxState.firestore.data.events[id].locations
+    const events = reduxState.firestore.ordered.events;
+    const event = events ? events[0] : null
+    const locations = event && event.locations
     //const location = events[id].locations ? events[id].locations : null
     console.log('event ',event)
     return {
         user : reduxState.firebase.auth,
         event : event,
+        locations : locations
     }
 }
 
@@ -146,8 +147,13 @@ export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect(props => [
         {
-            collection:'events'
+            collection:'events',
+            doc : props.match.params.event_id,
+            subcollections: [{ collection: 'locations' }]
         }
+        
+        
+        
     ])
 
 )(Event)
