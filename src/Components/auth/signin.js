@@ -12,7 +12,7 @@ class SignIn extends Component {
     const { user } = this.props
     if(!user.isEmpty) return <Redirect to='/' />
     return (
-      <div className='container'>
+      <div className='container section'>
         
         <div className="center">
             <button onClick={this.props.loginFacebook} className="btn blue darken-3 z-depth-0">

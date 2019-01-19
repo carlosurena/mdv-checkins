@@ -29,12 +29,7 @@ const eventReducer = (state = initState, action) => {
             return state;
         case 'DELETE_EVENT_ERROR':
             console.log("There was an error deleting an event", action.error);
-        case 'CREATE_LOCATION':
-            console.log('location created:', action.location);
-            return state;
-        case 'CREATE_LOCATION_ERROR':
-            console.log("There was an error creating a location", action.error);
-            return state;
+        
         default:
             return state;
 

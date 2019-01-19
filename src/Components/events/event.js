@@ -9,7 +9,8 @@ import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
-import { deleteEvent,createLocation } from '../../store/actions/eventactions'
+import { deleteEvent } from '../../store/actions/eventactions'
+import { createLocation } from '../../store/actions/locationactions'
 
 class Event extends Component{
 
@@ -18,7 +19,7 @@ class Event extends Component{
         event: null,
         creator: null,
         eventDeleted : false,
-        location : { title: 'Big kids'}
+        location : { title: 'General'}
     }
     componentDidMount(){
         
@@ -50,7 +51,6 @@ class Event extends Component{
         if(this.state.eventDeleted === true){
             return <Redirect to='/events'/>
         }
-        const eventID = this.props.match.params.event_id;
         const currentPath = "/event/" + this.state.id + "/";
         const { event } = this.props
         const eventRender = event ? (
@@ -125,11 +125,12 @@ class Event extends Component{
 
 const mapStateToProps = (reduxState, ownProps) =>{
     const id = ownProps.match.params.event_id;
-    const events = reduxState.firestore.ordered.events;
-    const event = events ? events[0] : null
-    const locations = event && event.locations
+    const events = reduxState.firestore.data.events;
+    const event = events ? events[id] : null
+
+    const locations = reduxState.firestore.ordered.locations
     //const location = events[id].locations ? events[id].locations : null
-    console.log('event ',event)
+    console.log('loc ',locations)
     return {
         user : reduxState.firebase.auth,
         event : event,
@@ -149,7 +150,12 @@ export default compose(
         {
             collection:'events',
             doc : props.match.params.event_id,
-            subcollections: [{ collection: 'locations' }]
+            
+        },
+        {
+            collection:'locations',
+            where: [['eventRef', '==', props.match.params.event_id]],
+            
         }
         
         

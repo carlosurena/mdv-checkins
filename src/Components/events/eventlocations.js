@@ -21,25 +21,23 @@ class EventLocations extends Component {
             <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
             <div className="row">
               
-                <div className="col s12">
-                    <ul className="tabs">
-                    {locations && locations.map(location =>{
-                      return(
-                        
-                        <li key={location.id} className="tab col s3"><a href={"#"+location.id}>{location.title}</a></li>
-                      )
-                    })}
-                        
-                    </ul>
-                </div>
-                <div>
-                {locations && locations.map(location =>{
-                      return(
-                        
-                        <div key={location.id} id={location.id} className="col s12"> CONTENT FOR {location.title}</div>)
-                    })}
-                  
-                </div>
+                
+
+                  {locations ? (
+                    <div>
+                      {locations.map(location =>{
+                        return(
+                          <div key={location.id} className='card'>{location.title}</div>
+                        )
+                      })
+                      }
+                    </div>
+                  ) : (
+                    null
+                  )}      
+                    
+                
+                
                 
             </div>
         </div>

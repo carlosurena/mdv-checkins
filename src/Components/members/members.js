@@ -81,6 +81,6 @@ const mapStateToProps = (reduxState) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'members' }
+    { collection: 'members', queryParams: [ 'orderByChild=first_name' ] }
   ])
 )(Members);
