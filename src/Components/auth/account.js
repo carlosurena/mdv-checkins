@@ -21,7 +21,8 @@ class Account extends Component {
             <p>User logged in as: {user.displayName}</p>
             <p>email: {user.email} </p>
             <p>Login Provider: {loginProvider}</p>
-           
+            <p>First Time login?: Not Implemented yet</p>
+            <p>Access Level: Not Implemented yet</p>
             
         </div>
       </div>

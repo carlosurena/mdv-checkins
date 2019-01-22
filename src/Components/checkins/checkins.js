@@ -14,7 +14,7 @@ class Checkins extends Component {
         <div className="section green">
         <div className="container">
             <div className="col">
-                <Link to="/station"><Button primary>Create Station</Button></Link>
+                <Link to="/station"><Button primary>Open a Station</Button></Link>
             </div>
         </div>
         

@@ -18,7 +18,7 @@ const resultRenderer = ({ name,phone,age,image }) => {
                     <div className="price"  >{age}</div>
                     <div className="title"  >{name}</div>
                     <div className="description" >{phone}</div>
-                    
+                    <div className="">V</div>
 
                 </div>
             </div>
@@ -47,13 +47,15 @@ class StationSearch extends Component {
     handleResultSelect = (e, { result }) => {
         this.setState({ value: result.name, selectedID: result.key, toMember: true })
         console.log('Person Selected')
+        this.props.addAttendee(result.key);
+
     }
 
     handleSearchChange = (e, { value }) => {
         
         this.setState({ isLoading: true, value })
-        console.log(this.props)
-        console.log(this.state)
+        //console.log(this.props)
+        //console.log(this.state)
 
 
     setTimeout(() => {
@@ -92,8 +94,8 @@ class StationSearch extends Component {
            
         }
   render() {
+      const {addAttendee} = this.props
       if(this.state.toMember){
-        return <Redirect to={'/member/'+ this.state.selectedID} />
       }
     const { isLoading, value, results } = this.state
     
@@ -104,7 +106,7 @@ class StationSearch extends Component {
 
      
             <Search
-                fluid
+                
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}

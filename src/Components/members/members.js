@@ -44,7 +44,7 @@ class Members extends Component {
   render() {
     const { members, user } = this.props
     if(user.isEmpty) return <Redirect to='/signin' />
-    
+    if(members) console.log('we have '+ members.length +' members')
     return (
       <div className="members-page">
         <div className="section green">

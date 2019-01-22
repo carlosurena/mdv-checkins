@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { Button } from 'semantic-ui-react'
 
 const StationLocationsList = (props) => {
 
@@ -13,17 +14,23 @@ const StationLocationsList = (props) => {
             
             <div className="section">
                 <h2>Choose a Location</h2>
-                {locations && locations.map(location =>{
+                {(locations && locations.length > 0) ? (locations.map(location =>{
                     return( 
 
                             <div className="card z-depth-1" key={location.id}>
                                 
                                 <div className="card-content">
                                     <a onClick={() => {handleLocationSelect(location)}}><span className="card-title">{location.title}</span></a>
-                                    
                                 </div>
                             </div> 
-                    )})
+                    )})) :
+                    (
+                        <div>
+                            <p>No locations available. Please ask your system administrator to add locations for this event!</p>
+                            <Button>Return</Button>
+
+                            </div>
+                    )
                 }
         
             </div>

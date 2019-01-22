@@ -29,14 +29,14 @@ class Navbar extends Component{
 }
 
 const mapStateToProps = (reduxState) =>{
-    console.log('redux state',reduxState)
+    //console.log('redux state',reduxState)
 
     return{
         user: reduxState.firebase.auth
     }
 }
 const mapDispatchToProps = (dispatch) =>{
-    console.log('redux state',dispatch)
+    //console.log('redux state',dispatch)
 
     return{
         logOut : () => dispatch(logOut())
