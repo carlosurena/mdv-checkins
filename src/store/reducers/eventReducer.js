@@ -1,12 +1,6 @@
 const initState = {
-    events: [
-        { id: 1, title: "Manantiales de Vida", type: "recurring", weekday: "Friday", occurence: "weekly", createdOn: "12/30/2018", creatorID: 23254 },
-        { id: 2, title: "Iglesia de Niños", type: "recurring", weekday: "Sunday", occurence: "weekly", createdOn: "12/30/2018", creatorID: 23254 },
-        { id: 3, title: "Retiro de Hombres", type: "single", startDate: "2/4/2019", endDate: "2/72019", createdOn: "12/30/2018", creatorID: 23254 },
-        { id: 4, title: "Retiro de Mujeres", type: "single", startDate: "2/4/2019", endDate: "2/72019", createdOn: "12/30/2018", creatorID: 23254 }
-
-
-    ]
+    events: [],
+    currentEvent: null
 
 };
 
@@ -29,7 +23,30 @@ const eventReducer = (state = initState, action) => {
             return state;
         case 'DELETE_EVENT_ERROR':
             console.log("There was an error deleting an event", action.error);
-        
+        case 'SET_CURRENT_EVENT':
+            console.log('current event set:', action.data);
+            return{
+                ...state,
+                currentEvent: action.data
+            }
+        case 'SET_CURRENT_EVENT_ERROR':
+            console.log("There was an error setting the current event", action.error);
+            return state;
+        case 'UPDATE_CURRENT_EVENT':
+            console.log('current event updated:', action.data);
+            return{
+                // ...state,
+                currentEvent: action.data
+            }
+        case 'UPDATE_CURRENT_EVENT_ERROR':
+            console.log("There was an error updating the current event", action.error);
+            return state;
+        case 'RESET_CURRENT_EVENT':
+            console.log("reset current event");
+            return{
+                 ...state,
+                currentEvent: null
+            }
         default:
             return state;
 

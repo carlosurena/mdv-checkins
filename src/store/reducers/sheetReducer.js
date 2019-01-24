@@ -8,16 +8,19 @@ const initState = {
 const sheetReducer = (state = initState, action) => {
     switch (action.type) {
         case 'CREATE_SHEET':
-            console.log('sheet created:', action.sheet);
-            return state;
+            console.log('sheet created:', action.data);
+            return{
+                ...state,
+                currentSheet : action.data
+            };
         case 'CREATE_SHEET_ERROR':
-            console.log("There was an error creating a sheet", action.error);
+            console.log("There was an error creating a sheet", action.err);
             return state;
         case 'ADD_ATTENDEE':
             console.log('attendee added:', action.attendeeID);
             return state;
         case 'ADD_ATTENDEE_ERROR':
-            console.log("There was an error adding an attendee to the sheet", action.error);
+            console.log("There was an error adding an attendee to the sheet", action.err);
             return state;
         case 'SET_CURRENT_SHEET':
             console.log('current sheet set:', action.data);
@@ -26,7 +29,7 @@ const sheetReducer = (state = initState, action) => {
                 currentSheet: action.data
             }
         case 'SET_CURRENT_SHEET_ERROR':
-            console.log("There was an error setting the current sheet", action.error);
+            console.log("There was an error setting the current sheet", action.err);
             return state;
         case 'UPDATE_CURRENT_SHEET':
             console.log('current sheet updated:', action.data);
@@ -35,8 +38,20 @@ const sheetReducer = (state = initState, action) => {
                 currentSheet: action.data
             }
         case 'UPDATE_CURRENT_SHEET_ERROR':
-            console.log("There was an error updating the current sheet", action.error);
+            console.log("There was an error updating the current sheet", action.err);
             return state;
+        case 'RESET_CURRENT_SHEET':
+            console.log("reset current sheet");
+            return{
+                 ...state,
+                currentSheet: null
+            }
+        case 'GET_TODAY_SHEET':
+            console.log("found today's sheet", action.currentSheet);
+            return{
+                 ...state,
+                currentSheet: action.currentSheet
+            }
         default:
             return state;
 

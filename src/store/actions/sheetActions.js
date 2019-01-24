@@ -1,31 +1,39 @@
-export const createSheet = (eventID,locationID,user, sheet) => {
+export const createSheet = (eventID,locationID,user) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         //make async call to database
 
-        
+        console.log('creating sheet')
         const firestore = getFirestore();
-        //const creatorRef = firestore.collection('users').doc(user.uid)
-        //var eventRef = firestore.collection('events').doc(eventID);
 
         firestore.collection('sheets').add({
             date: new Date(),
-            attendees : [],
             eventRef: eventID,
             locationRef: locationID,
             creatorID: user.uid,
             creatorName: user.displayName,
             createdOn: new Date(),
-            updatedOn: new Date()
-        }).then( () => {
-            dispatch({ type: 'CREATE_LOCATION', locationID});
+            updatedOn: new Date(),
+
+        }).then( (sheet) => {
+            
+            sheet.get().then((doc) =>{
+                var data = doc.data()
+                data.id = sheet.id
+                data.attendees = []
+                dispatch({ type: 'CREATE_SHEET', data});
+            })
+
+            
         }).catch( (err) =>{
-            dispatch({ type: 'CREATE_LOCATION_ERROR', err});
+            dispatch({ type: 'CREATE_SHEET_ERROR', err});
         }) 
+
+
 
     }
 }
 
-export const addAttendee = (sheet, attendeeID) => {
+export const addAttendee = (sheet, attendeeID,user) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         //make async call to database
         console.log("updating attendee array with: ",sheet.id,attendeeID)
@@ -34,8 +42,12 @@ export const addAttendee = (sheet, attendeeID) => {
         //const creatorRef = firestore.collection('users').doc(user.uid)
         //var eventRef = firestore.collection('events').doc(eventID);
 
-        firestore.collection('sheets').doc(sheet.id).update({
-            attendees : firestore.FieldValue.arrayUnion(attendeeID)
+        firestore.collection('sheets').doc(sheet.id).collection('attendees').doc(attendeeID).set({
+            checkInDate: new Date(),
+            checkOutDate: null,
+            updatedOn: new Date(),
+            checkedInBy: user.uid,
+            attendeeID: attendeeID 
         }).then( () => {
             dispatch({ type: 'ADD_ATTENDEE', attendeeID});
         }).catch( (err) =>{
@@ -58,9 +70,14 @@ export const setCurrentSheet = (sheet) => {
         sheetRef.get().then( (doc) => {
             if (doc.exists) {
                 var data = doc.data();
-                data.id = sheet.id;
-                console.log(data)
-                dispatch({ type: 'SET_CURRENT_SHEET', data });
+                data.id = doc.id;
+                const attendeesRef = firestore.collection('sheets').doc(sheet.id).collection('attendees')
+                attendeesRef.get().then((attendees) => {
+                    data.attendees = attendees.docs.map(doc => doc.data())
+                    dispatch({ type: 'SET_CURRENT_SHEET', data });
+                }).catch((err) =>{
+                    dispatch({ type: 'SET_CURRENT_SHEET_ERROR', err });
+                })
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -81,18 +98,103 @@ export const updateCurrentSheet = () => {
         const firestore = getFirestore();
         const sheetRef = firestore.collection('sheets').doc(currentSheetID);
         sheetRef.get().then( (doc) => {
+            
             if (doc.exists) {
                 var data = doc.data();
                 data.id = currentSheetID;
-                console.log(data)
-                dispatch({ type: 'UPDATE_CURRENT_SHEET', data });
+                const attendeesRef = firestore.collection('sheets').doc(currentSheetID).collection('attendees')
+                attendeesRef.get().then((attendees) => {
+                    data.attendees = attendees.docs.map(doc => doc.data())
+                    dispatch({ type: 'UPDATE_CURRENT_SHEET', data });
+                }).catch((err) =>{
+                    dispatch({ type: 'UPDATE_CURRENT_SHEET_ERROR', err});
+                })
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
+
         }).catch( (err) =>{
             dispatch({ type: 'UPDATE_CURRENT_SHEET_ERROR', err});
         }) 
 
+    }
+}
+
+export const getTodaySheetFromSelection = (eventRef,locationRef,user) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log("finding today's sheet for selected event and location", eventRef, locationRef)
+         
+        const firestore = getFirestore();
+        const today  = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setMilliseconds(0);
+        today.setSeconds(0);
+
+        
+        const sheetRef = firestore.collection('sheets')
+        .where('eventRef','==',eventRef)
+        .where('locationRef','==',locationRef)
+        .where('date','>=',today).limit(1);
+
+        sheetRef.get().then((sheets) => {
+            console.log(sheets)
+            if(sheets.docs.length > 0){
+                var currentSheet = sheets.docs[0].data();
+                currentSheet.id = sheets.docs[0].id
+                // Querying DB to get attendees subcollection
+                const attendeesRef = firestore.collection('sheets').doc(currentSheet.id).collection('attendees')
+                attendeesRef.get().then((attendees) => {
+                    currentSheet.attendees = attendees.docs.map(doc => doc.data())
+                    console.log("sheet found!",currentSheet)               
+                    dispatch({ type: 'GET_TODAY_SHEET', currentSheet });
+                }).catch((err) =>{
+                    dispatch({ type: 'UPDATE_CURRENT_SHEET_ERROR', err});
+                })
+                 //set current sheet(sheet)
+            }else{
+                console.log('sheet not found. creating a sheet.')
+                //dispatch({ type: 'GET_TODAY_SHEET', currentSheet });
+                firestore.collection('sheets').add({
+                    date: new Date(),
+                    eventRef: eventRef,
+                    locationRef: locationRef,
+                    creatorID: user.uid,
+                    creatorName: user.displayName,
+                    createdOn: new Date(),
+                    updatedOn: new Date(),
+        
+                }).then( (sheet) => {
+                    
+                    sheet.get().then((doc) =>{
+                        var data = doc.data()
+                        data.id = sheet.id
+                        data.attendees = []
+                        dispatch({ type: 'CREATE_SHEET', data});
+                    })
+        
+                    
+                }).catch( (err) =>{
+                    dispatch({ type: 'CREATE_SHEET_ERROR', err});
+                }) 
+
+            }
+            
+        }).catch((err) =>{
+            dispatch({ type: 'GET_TODAY_SHEET_ERROR', err});
+        })
+
+     
+
+    }
+}
+
+
+export const resetCurrentSheet = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+
+    dispatch({ type: 'RESET_CURRENT_SHEET'});
     }
 }

@@ -25,16 +25,17 @@ class AttendeesList extends Component {
         this.setState({
             attendeeData : []
         })
-        sheet.attendees.forEach(attendee => {
+        
+        sheet.attendees ? (sheet.attendees.forEach(attendee => {
             members.find( member => {
-                if(member.id == attendee){
+                if(member.id == attendee.attendeeID){
                     //console.log("member matched with attendee ID", member, attendee)
                     this.setState(prevState => ({
                         attendeeData: [...prevState.attendeeData, member]
                       }))
                 }
             })
-        });
+        })) :(console.log('no attendees checked in for this sheet.'));
     }
   render() {
       const {members,sheet} = this.props

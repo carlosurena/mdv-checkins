@@ -60,3 +60,61 @@ export const deleteEvent = (id) => {
         }) 
     }
 }
+
+export const setCurrentEvent = (event) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log("settting current event")
+        
+        const firestore = getFirestore();
+        // const creatorRef = firestore.collection('users').doc(user.uid)
+        // var eventRef = firestore.collection('events').doc(eventID);
+        var eventRef = firestore.collection('events').doc(event.id);
+
+        eventRef.get().then( (doc) => {
+            if (doc.exists) {
+                var data = doc.data();
+                data.id = event.id;
+                console.log(data)
+                dispatch({ type: 'SET_CURRENT_EVENT', data });
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch( (err) =>{
+            dispatch({ type: 'SET_CURRENT_EVENT_ERROR', err});
+        }) 
+
+    }
+}
+
+export const updateCurrentEvent = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log("updating current event",)
+        const currentEventID = getState().event.currentEvent.id;
+         
+        const firestore = getFirestore();
+        const eventRef = firestore.collection('events').doc(currentEventID);
+        eventRef.get().then( (doc) => {
+            if (doc.exists) {
+                var data = doc.data();
+                data.id = currentEventID;
+                console.log(data)
+                dispatch({ type: 'UPDATE_CURRENT_EVENT', data });
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch( (err) =>{
+            dispatch({ type: 'UPDATE_CURRENT_EVENT_ERROR', err});
+        }) 
+
+    }
+}
+export const resetCurrentEvent = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+
+    dispatch({ type: 'RESET_CURRENT_EVENT'});
+    }
+}

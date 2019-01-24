@@ -5,6 +5,7 @@ import {combineReducers} from 'redux'
 import { firestoreReducer } from 'redux-firestore'
 import { firebaseReducer } from 'react-redux-firebase'
 import sheetReducer from './sheetReducer'
+import locationReducer from './locationReducer'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     member: memberReducer,
     firestore: firestoreReducer,
     firebase: firebaseReducer,
-    sheet : sheetReducer
+    sheet : sheetReducer,
+    location : locationReducer
     
 });
 
