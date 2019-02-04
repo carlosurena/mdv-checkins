@@ -42,8 +42,7 @@ class Station extends Component {
         const { user,members, currentEvent, currentLocation } = this.props
         if(user.isEmpty) return <Redirect to='/' />
         return(
-            <div className="section green lighten-4 station-container">
-                <div className="row container">
+            <div className="ui page grid">
                     {currentEvent ? (
                         (currentLocation? (
                             <StationCheckin event={currentEvent} eventID={currentEvent.id} currentDate={this.state.currentDate} members={this.props.members} locationID={currentLocation.id}/>
@@ -58,7 +57,6 @@ class Station extends Component {
 
                         )}
 
-                </div>
             </div>
         )
     }

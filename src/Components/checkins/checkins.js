@@ -10,23 +10,21 @@ class Checkins extends Component {
     if(user.isEmpty) return <Redirect to='/signin' />
     
     return (
-      <div className="">
-        <div className="section green">
-        <div className="container">
-            <div className="col">
-                <Link to="/station"><Button primary>Open a Station</Button></Link>
-            </div>
-        </div>
-        
+      <div className="ui">
+          <div className="ui teal inverted segment">
+              <div className="">
+                  <Link to="/station"><Button primary>Open a Station</Button></Link>
+              </div>
+          </div>
 
-        </div>
-        <div className="container">
-          <div className="section">
+
+        <div className="ui container">
+          <div className="">
             <h3>
               {this.props.user ? ("Welcome, "+this.props.user.displayName+ "!"):(null)}
             </h3>
           </div>
-            <div className="row">
+            <div className="">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore itaque vitae reprehenderit corrupti cumque exercitationem autem dolor enim facere iure, illo tenetur soluta ab quisquam rerum deserunt beatae officia veniam!
             </div>
         </div>

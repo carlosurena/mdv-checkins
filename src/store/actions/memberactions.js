@@ -68,3 +68,23 @@ export const searchMembers = (query) => {
         }) 
     }
 }
+
+export const updateMembersList = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log('updating members list')
+        const firestore = getFirestore();
+        firestore.collection('members').get().then( (members) =>{
+            var data = members.docs.map( doc => {
+                const member = doc.data()
+                return{
+                    ...doc.data(),
+                    id: doc.id
+                }
+            })
+            //dispatch({})
+        }
+        )
+
+    }
+}

@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import {createEvent } from '../../store/actions/eventactions'
-import M from 'materialize-css'
-
+import { Modal, Form, Button, Checkbox} from 'semantic-ui-react'
 
 class CreateEvent extends Component {
     state = {
         title:'',
         isRecurring: false,
         weekday:'',
-        eventTime:''
+        eventTime:'',
+        modalOpen: false
     }
 
     handleChange = (e) => {
@@ -17,27 +17,23 @@ class CreateEvent extends Component {
             [e.target.id]: e.target.value
         })
     }
-    handleRadioChange = (e) => {
-        if(e.currentTarget.value === 'true'){
-            this.setState({
-                [e.target.name]: true
-            })
-        }else if(e.currentTarget.value === 'false'){
-            this.setState({
-                [e.target.name]: false
-            })
-        }else{
-            this.setState({
-                [e.target.name]: e.currentTarget.value
-            })
-        }
-        
+    handleRadioChange = (e, {value}) => {
+       console.log('radio changed to', value)
+       this.setState({
+           weekday: value
+       }) 
         
     }
     
     handleDropdownChange = (e) => {
         this.setState({
             [e.target.id]: e.currentTarget.value
+        })
+    }
+
+    handleCheckbox = (e, {checked}) => {
+        this.setState({
+            isRecurring : checked
         })
     }
 
@@ -50,28 +46,155 @@ class CreateEvent extends Component {
         e.preventDefault();
         console.log("submiting ",this.state)
         this.props.createEvent(this.state,this.props.user);
+        this.handleClose()
+        
+     
+    }
+    openModal = () =>{
         this.setState({
+            modalOpen:true
+        })
+    }
+
+    handleClose = () =>{
+        this.setState({
+            modalOpen:false,
             title:'',
             isRecurring: false,
             weekday:'',
             eventTime:''
-        });
-        
-        //close modal
-        //var instance = M.Modal.getInstance(document.getElementById('modal-close-btn'));
-        //M.Modal.init(elem);
-
-        let elem = document.querySelector('#createEventModal');
-        var instance = M.Modal.init(elem);
-        
-        //var instance = M.Modal.getInstance(elem);
-        instance.close();
-        //document.getElementById("EventsForm").reset();
+        })
     }
 
     render(){
+        const eventOptions = [
+            {key: '', text: 'Male', value: 'M'},
+            {key: 'f', text: 'Female', value: 'F'},
+        ]
+
+        const memberOptions = [
+            {key: 'visitor', text: 'Visitor', value: 'Visitor'},
+            {key: 'visitorInProgress', text: 'Visitor in Progress', value: 'VisitorInProgress'},
+            {key: 'passiveMember', text: 'Passive Member', value: 'PassiveMember'},
+            {key: 'activeMember', text: 'Active Member', value: 'ActiveMember'},
+
+
+        ]
         return(
-             <div id="createEventModal" className="modal modal-fixed-footer">
+            <div>
+            <Button primary onClick={this.openModal}>+ Event</Button>
+                <Modal open={this.state.modalOpen} onClose={this.handleClose} size="tiny" >
+                    <Modal.Header>
+                        Create an Event
+                    </Modal.Header>
+                    <Modal.Content>
+                    <div className="ui grid">
+
+                        <Form onSubmit={this.handleSubmit} id="addEvent">
+                            <Form.Group>
+                                <Form.Field required>
+                                    <label>Title</label>
+                                    <input  id="title" onChange={this.handleChange} placeholder='First Name' />
+                                </Form.Field>
+                            </Form.Group>
+                            <Form.Group inline>
+                                <label>{this.state.isRecurring ? ('Recurring Event') :('Single Event')}</label>
+                                <Form.Checkbox 
+                                checked={this.state.isRecurring}
+                                id='isRecurring'
+                                onChange={this.handleCheckbox} 
+                                toggle></Form.Checkbox>
+                                
+                                
+                            </Form.Group>
+
+                            <Form.Group inline>
+                                {this.state.isRecurring ? (
+                                    <Form.Field inline required>
+                                        <label>Day</label>
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Mon'
+                                        name='weekday'
+                                        value='Monday'
+                                        checked={this.state.weekday === 'Monday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Tue'
+                                        name='weekday'
+                                        value='Tuesday'
+                                        checked={this.state.weekday === 'Tuesday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Wed'
+                                        name='weekday'
+                                        value='Wednesday'
+                                        checked={this.state.weekday === 'Wednesday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Thu'
+                                        name='weekday'
+                                        value='Thursday'
+                                        checked={this.state.weekday === 'Thursday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Fri'
+                                        name='weekday'
+                                        value='Friday'
+                                        checked={this.state.weekday === 'Friday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Sat'
+                                        name='weekday'
+                                        value='Saturday'
+                                        checked={this.state.weekday === 'Saturday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                        <Form.Checkbox 
+                                        radio
+                                        label='Sun'
+                                        name='weekday'
+                                        value='Saturday'
+                                        checked={this.state.weekday === 'Sunday'}
+                                        onChange={this.handleRadioChange}
+                                        />
+                                    </Form.Field>
+                                    ) : (null)}
+                               
+                            </Form.Group>
+                                
+                                
+                            
+                            <Form.Group>
+                               
+                            </Form.Group>
+
+                            
+                        </Form>
+                    </div>
+                    </Modal.Content>
+
+                    <Modal.Actions>
+                        <Button  disabled= {
+                            !this.state.title ||
+                            (this.state.isRecurring && !this.state.weekday)
+                        }  positive type="submit" form="addEvent" >Create</Button>
+                        <Button negative type="" onClick={this.handleClose}>Cancel</Button>
+
+                    </Modal.Actions>
+                </Modal>
+            
+             {/* <div id="createEventModal" className="modal modal-fixed-footer">
                  
              <form id="eventsForm" onSubmit={this.handleSubmit}>
                 <div className="modal-content">
@@ -164,8 +287,8 @@ class CreateEvent extends Component {
                         <button id="modal-close-btn" type="submit" className="btn">Submit</button>
                     </div>
                 </form>
+            </div> */}
             </div>
-            
         )
     }
 }

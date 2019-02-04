@@ -198,3 +198,33 @@ export const resetCurrentSheet = () => {
     dispatch({ type: 'RESET_CURRENT_SHEET'});
     }
 }
+
+
+export const getSheetsFromLocation = (locationRef,eventRef) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        
+        console.log("getting all sheeets from location: ", locationRef, eventRef)
+        const firestore = getFirestore();
+
+        const sheetRef = firestore.collection('sheets')
+        .where('eventRef','==',eventRef)
+        .where('locationRef','==',locationRef).orderBy('date','desc')
+
+        sheetRef.get().then( sheets => {
+            var data = sheets.docs.map( doc => {
+                const sheet = doc.data()
+                return{
+                    ...doc.data(),
+                    id: doc.id
+                }
+            })
+            console.log('data', data)
+            dispatch({ type: 'GET_SHEETS_FROM_LOCATION', data});
+
+        }
+            
+            );
+
+    }
+}
+

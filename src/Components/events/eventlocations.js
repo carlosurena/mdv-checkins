@@ -1,49 +1,93 @@
 import React, { Component } from 'react';
-import M from 'materialize-css';
-import {Button} from 'semantic-ui-react'
+import {Button, Card} from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { setCurrentLocation,resetCurrentLocation} from '../../store/actions/locationactions'
+import { setCurrentSheet, resetCurrentSheet } from '../../store/actions/sheetActions'
+import { firestoreConnect } from 'react-redux-firebase' 
+import EventLocationsList from './eventLocationsList'
+import EventSheetsList from './eventSheetsList'
+import AttendeesList from '../station/attendeesList'
 
 class EventLocations extends Component {
  state = {
-   sections: [ "Eyri", 'Jovenes', 'Beatriz', 'Karla', 'Orlando', 'Marcela']
 
  }
  componentDidMount() {
-  // Auto initialize all the things!
-  M.AutoInit();
+  this.props.resetCurrentLocation();
+  this.props.resetCurrentSheet();
 }
-  render() {
-    const {locations,event} = this.props
-    console.log(locations)
-    return (
-      <div>
-        <div className="container section">
-            <h4>Locations</h4>
-            <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
-            <div className="row">
-              
-                
 
-                  {locations ? (
-                    <div>
-                      {locations.map(location =>{
-                        return(
-                          <div key={location.id} className='card'>{location.title}</div>
-                        )
-                      })
-                      }
-                    </div>
-                  ) : (
-                    null
-                  )}      
-                    
-                
-                
-                
-            </div>
+handleLocationSelect = (location) => {
+  this.props.setCurrentLocation(location)
+  this.props.resetCurrentSheet();
+  console.log('handling location click', this.state)
+  
+}
+handleSheetSelect = (sheet) => {
+
+  this.props.setCurrentSheet(sheet)
+  console.log('handling sheet click', sheet)
+  
+}
+
+handleBack = (e) => {
+  this.props.resetCurrentSheet();
+}
+
+  render() {
+    const { eventID, members, currentLocation, currentSheet } = this.props
+    return(
+        <div className="">
+                {currentLocation ? (
+                    (currentSheet? (
+                      <div>
+                        <p>selected sheet</p>
+                        <Button onClick={this.handleBack}>Back</Button>
+                        <AttendeesList members={members} sheet={currentSheet}/>
+                      </div>                    ) : (
+                      <div>
+                        <p>list of sheets for {currentLocation.title}</p>
+                        <EventSheetsList handleSheetSelect={ (sheet) =>{this.handleSheetSelect(sheet)} }  eventID={eventID}  locationID={currentLocation.id} />
+                      </div>                    ))
+                    ) : 
+                    (
+                      <div>
+                        <p>list of locations (current location not selected)</p>
+                        <EventLocationsList handleLocationSelect={ (location) =>{this.handleLocationSelect(location)} } eventID={eventID} />
+                        <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
+                      </div>
+                    )}
+
         </div>
-      </div>
     )
+}
+}           
+
+const mapStateToProps = (reduxState) =>{
+  console.log('reduxstate',reduxState)
+  return {
+    currentLocation: reduxState.location.currentLocation,
+    currentSheet: reduxState.sheet.currentSheet,
+    members : reduxState.firestore.ordered.members
   }
 }
 
-export default EventLocations 
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    setCurrentLocation : (location) => dispatch(setCurrentLocation(location)),
+    setCurrentSheet : (sheet) => dispatch(setCurrentSheet(sheet)),
+    resetCurrentLocation : () => dispatch(resetCurrentLocation()),
+    resetCurrentSheet : () => dispatch(resetCurrentSheet())
+ 
+  }
+}
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect(props =>[
+    {
+        collection : 'members'
+    }
+])
+)(EventLocations) 

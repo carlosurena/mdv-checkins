@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Search, Label } from 'semantic-ui-react'
+import {Search, Label, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import faker from 'faker'
 import { Redirect } from 'react-router-dom'
+import AddMember from '../members/addMember'
 
 var source;
 const resultRenderer = ({ name,phone,age,image }) => {
@@ -18,13 +19,13 @@ const resultRenderer = ({ name,phone,age,image }) => {
                     <div className="price"  >{age}</div>
                     <div className="title"  >{name}</div>
                     <div className="description" >{phone}</div>
-                    <div className="">V</div>
 
                 </div>
             </div>
 
     )
 }
+
 resultRenderer.propTypes = {
     name: PropTypes.string,
     phone: PropTypes.string,
@@ -100,9 +101,8 @@ class StationSearch extends Component {
     const { isLoading, value, results } = this.state
     
     return (
-     <div className="row">
+     <div className="segment">
 
-         <div className="col centered s12 m6">
 
      
             <Search
@@ -113,10 +113,14 @@ class StationSearch extends Component {
                 results={results}
                 value={value}
                 resultRenderer= {resultRenderer}
+                noResultsMessage= {
+                    <div className="inline ">
+                        <span>No match. </span> 
+                        <AddMember />
+                    </div>                    }
                 {...this.props}
             />
         
-          </div>
         </div>
     )
   }

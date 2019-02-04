@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PersonDetailsModal from './personDetailsModal'
 
 class AttendeesList extends Component {
     state ={
@@ -42,23 +43,20 @@ class AttendeesList extends Component {
       
     return (
       <div>
-      <table className="highlight centered ">
+      <table className="ui table ">
                     <thead>
                     <tr>
                         <th className="">Name</th>
-                        <th className="hide-on-small-only">Age</th>
-                        <th className="hide-on-med-and-down">Gender</th>
-                        <th className=""> Checked In?</th>
+                        <th className="">Age</th>
                     </tr>
                     </thead>
                     <tbody>
                     { this.state.attendeeData && this.state.attendeeData.map(attendee => {
                         return (
                             <tr className="member" key={attendee.id}>
-                                <td>{attendee.first_name} {attendee.last_name}</td>
+                                <td><PersonDetailsModal attendee={attendee} /></td>
                                 <td>{Math.abs(new Date(Date.now() - attendee.dob.toDate()).getUTCFullYear() - 1970 )}</td>
-                                <td>{attendee.gender}</td>
-                                <td>Yes</td>
+                                
 
                             </tr>
                         )

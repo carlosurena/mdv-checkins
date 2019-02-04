@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { Button } from 'semantic-ui-react'
+import { Button,Card } from 'semantic-ui-react'
 
 const StationLocationsList = (props) => {
 
@@ -12,17 +12,20 @@ const StationLocationsList = (props) => {
     console.log('ev id', eventID)
         return(
             
-            <div className="section">
+            <div className="ui one column centered">
                 <h2>Choose a Location</h2>
                 {(locations && locations.length > 0) ? (locations.map(location =>{
                     return( 
 
-                            <div className="card z-depth-1" key={location.id}>
+                           
+                            
+                            <Card key={location.id}>
+                                <Card.Content header={
+                                    <a onClick={() => {handleLocationSelect(location)}}>{location.title}</a>
+                                }
+                                />
                                 
-                                <div className="card-content">
-                                    <a onClick={() => {handleLocationSelect(location)}}><span className="card-title">{location.title}</span></a>
-                                </div>
-                            </div> 
+                        </Card> 
                     )})) :
                     (
                         <div>

@@ -99,9 +99,9 @@ class SearchMember extends Component {
     const { isLoading, value, results } = this.state
     
     return (
-     <div className="row">
+     <div className="">
 
-         <div className="col centered s12 m6">
+         <div className="ui centered">
 
      
             <Search

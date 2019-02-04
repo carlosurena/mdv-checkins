@@ -5,10 +5,14 @@ import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { logOut } from '../../store/actions/authActions'
 
+
 class Navbar extends Component{
     
     state = {
 
+    }
+    componentDidMount() {
+   
     }
     render(){
         return(

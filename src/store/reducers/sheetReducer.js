@@ -52,6 +52,13 @@ const sheetReducer = (state = initState, action) => {
                  ...state,
                 currentSheet: action.currentSheet
             }
+        case 'GET_SHEETS_FROM_LOCATION':
+            console.log("found all sheets for SPECIFIED location", action.data);
+            return{
+                 ...state,
+                sheets: action.data
+            }
+            
         default:
             return state;
 

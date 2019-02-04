@@ -2,20 +2,22 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import {createMember } from '../../store/actions/memberactions'
 import M from 'materialize-css'
-
+import {Modal, Button, Form, Dropdown} from 'semantic-ui-react'
 
 class AddMember extends Component {
     state = {
         fname: '',
         lname:'',
         dob: '',
-        gender: 'M',
+        gender: '',
         phone: '',
         createdOn:'',
-        type:''
+        type:'',
+        modalOpen: false
     }
 
     handleChange = (e) => {
+        console.log('input is changing', e.target.value)
         this.setState({
             [e.target.id]: e.target.value
         })
@@ -26,10 +28,22 @@ class AddMember extends Component {
         })
     }
     
-    handleDropdownChange = (e) => {
-        this.setState({
-            [e.target.id]: e.currentTarget.value
-        })
+    handleDropdownChange = (e, data) => {
+
+        if(data.placeholder === "Select Gender"){
+            console.log('gender is changing', data)
+
+            this.setState({
+                gender: data.value
+            })
+        }else if(data.placeholder === "Select Member Type"){
+            console.log('type is changing', data)
+
+            this.setState({
+                type: data.value
+            })
+        }
+        
     }
 
 
@@ -45,92 +59,106 @@ class AddMember extends Component {
             fname: '',
             lname: '',
             dob: '',
-            gender: 'M',
+            gender: '',
             phone: '',
             createdOn:'',
             type:''
         });
         
-        //close modal
-        //var instance = M.Modal.getInstance(document.getElementById('modal-close-btn'));
-        //M.Modal.init(elem);
-
-        let elem = document.querySelector('#addMemberModal');
-        var instance = M.Modal.init(elem);
-        
-        //var instance = M.Modal.getInstance(elem);
-        instance.close();
-        //document.getElementById("membersForm").reset();
+      this.handleClose()
     }
 
-    render(){
-        return(
-             <div id="addMemberModal" className="modal modal-fixed-footer">
-             <form id="membersForm" onSubmit={this.handleSubmit}>
-                <div className="modal-content">
-                    <div className="row">
-                        <h4>New Member</h4>
-                    </div>
-                    <div className="row">
-                        <div className="input-field col s6">
-                            <i className="material-icons prefix">account_circle</i>
-                            <input id="fname" type="text" className="validate"  onChange={this.handleChange} value={this.state.fname} required />
-                            <label htmlFor="fname">First Name</label>
-                        </div> 
-                        <div className="input-field col s6">
-                            <input id="lname" type="text" className="validate"  onChange={this.handleChange} value={this.state.lname} required />
-                            <label htmlFor="lname">Last Name</label>
-                        </div>   
-                    </div>
-                    <div className="row">
-                    <div className="input-field col s6">
-                            <span className="col s6">
-                                <label>
-                                    <input onChange={this.handleRadioChange} value="M" name="gender" type="radio" checked />
-                                    <span>Male</span>
-                                </label>                            
-                            </span>
-                            <span className="col s6">
-                                <label>
-                                    <input onChange={this.handleRadioChange} value="F" name="gender" type="radio"  />
-                                    <span>Female</span>
-                                </label>                            
-                            </span>
-                            
-                        </div> 
+    openModal = () =>{
+        this.setState({
+            modalOpen:true
+        })
+    }
 
-                        <div className="input-field col s6">
-                            <i className="material-icons prefix">insert_invitation</i>
-                            <input id="dob" type="date" className="validate"  onChange={this.handleChange} value={this.state.dob} required />
-                            <label htmlFor="dob">Birthdate</label>
-                        </div> 
-                        
+    handleClose = () =>{
+        this.setState({
+            modalOpen:false
+        })
+    }
+    render(){
+        const genderOptions = [
+            {key: 'm', text: 'Male', value: 'M'},
+            {key: 'f', text: 'Female', value: 'F'},
+        ]
+
+        const memberOptions = [
+            {key: 'visitor', text: 'Visitor', value: 'Visitor'},
+            {key: 'visitorInProgress', text: 'Visitor in Progress', value: 'VisitorInProgress'},
+            {key: 'passiveMember', text: 'Passive Member', value: 'PassiveMember'},
+            {key: 'activeMember', text: 'Active Member', value: 'ActiveMember'},
+
+
+        ]
+        return(
+            <div className="">
+                <Button className="" primary onClick={this.openModal}>+ Person</Button>
+                <Modal open={this.state.modalOpen} onClose={this.handleClose} size="tiny" >
+                    <Modal.Header>
+                        Add a Person
+                    </Modal.Header>
+                    <Modal.Content>
+                    <div className="ui grid">
+
+                        <Form onSubmit={this.handleSubmit} id="addPerson">
+                            <Form.Group>
+                                <Form.Field required>
+                                    <label>First Name</label>
+                                    <input  id="fname" onChange={this.handleChange} placeholder='First Name' />
+                                </Form.Field>
+                                <Form.Field required>
+                                    <label>Last Name</label>
+                                    <input  id="lname" onChange={this.handleChange} placeholder='Last Name' />
+                                </Form.Field> 
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Field required>
+                                    <label>Gender</label>
+                                    <Dropdown required placeholder='Select Gender' fluid selection onChange={this.handleDropdownChange} options={genderOptions}>
+                                        </Dropdown>                         
+                                </Form.Field>
+                                <Form.Field required>
+                                    <label>Member Type</label>
+                                    <Dropdown required placeholder='Select Member Type' fluid selection onChange={this.handleDropdownChange} options={memberOptions}>
+                                    </Dropdown>                         
+                                </Form.Field>
+                            </Form.Group>
+                                
+                                
+                            
+                            <Form.Group>
+                                <Form.Field required>
+                                    <label>Birthdate</label>
+                                    <input required id="dob" type="date" onChange={this.handleChange} placeholder='Birthdate' />
+                                </Form.Field>
+                                <Form.Field required>
+                                    <label>Phone #</label>
+                                    <input required id="phone" onChange={this.handleChange} placeholder='Phone Number' />
+                                </Form.Field> 
+                            </Form.Group>
+
+                            
+                        </Form>
                     </div>
-                    <div className="row">
-                        <div className="input-field col s6">
-                            <i className="material-icons prefix">phone</i>
-                            <input id="phone" type="tel" className="validate"  onChange={this.handleChange} value={this.state.phone} required />
-                            <label htmlFor="phone">Phone Number</label>
-                        </div> 
-                        <div className="input-field col s6">
-                            <select id="type" value='' onChange={this.handleDropdownChange}>
-                                <option value="" disabled >Choose a type</option>
-                                <option value="Visitor">Visitor</option>
-                                <option value="RegularVisitor">Regular Visitor</option>
-                                <option value="Passive">Passive Member</option>
-                                <option value="Active">Active Member</option>
-                            </select>
-                            <label>Type of Member</label>
-                        </div> 
-                    </div>            
-                   
-                </div>
-                    <div className="modal-footer">
-                        <button id="modal-close-btn" type="submit" className="btn">Submit</button>
-                    </div>
-                </form>
+                    </Modal.Content>
+
+                    <Modal.Actions>
+                        <Button  disabled= {
+                            !this.state.fname ||
+                            !this.state.lname ||
+                            !this.state.gender ||
+                            !this.state.type ||
+                            !this.state.dob ||
+                            !this.state.phone
+                        }  positive type="submit" form="addPerson" >Create</Button>
+                        <Button negative type="" onClick={this.handleClose}>Cancel</Button>
+
+                    </Modal.Actions>
+                </Modal>
             </div>
-            
         )
     }
 }

@@ -15,7 +15,7 @@ import Account from './Components/auth/account'
 
 class App extends Component {
   state = {
-    page: "Members"
+
    
   }
 

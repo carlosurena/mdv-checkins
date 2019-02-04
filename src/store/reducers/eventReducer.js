@@ -1,6 +1,7 @@
 const initState = {
     events: [],
-    currentEvent: null
+    currentEvent: null,
+    activeItem: "Info",
 
 };
 
@@ -46,6 +47,12 @@ const eventReducer = (state = initState, action) => {
             return{
                  ...state,
                 currentEvent: null
+            }
+        case 'SET_ACTIVE_EVENT_MENU_ITEM':
+            console.log("active item set");
+            return{
+                 ...state,
+                activeItem: action.activeItem
             }
         default:
             return state;

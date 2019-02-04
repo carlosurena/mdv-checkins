@@ -3,21 +3,16 @@ import {NavLink } from 'react-router-dom'
 
 const SignedOutLinks = () => {
     return(
-        <div>
-            <nav className="nav-wrapper green lighten-1">
-                <div className="container">
-                <a href="#" data-target="mobile-nav" className="sidenav-trigger"><i className="material-icons">menu</i></a>
-                    <ul className="right hide-on-med-and-down">
-                        <li><NavLink to="/signin">Log In</NavLink></li>
-                    </ul>
+        
+            <div className="ui secondary pointing menu">
+                <div className="right menu">
+    
+                        <div className="item"><NavLink to="/signin">Log In</NavLink></div>
+                    
                 </div>
-            </nav>
+            </div>
 
-            <ul className="sidenav" id="mobile-nav">
-            
-                <li><NavLink to="/signin">Log In</NavLink></li>
-            </ul>
-        </div>
+     
     )
 }
 

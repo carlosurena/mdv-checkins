@@ -14,7 +14,6 @@ export const createEvent = (event,user) => {
             creatorName: user.displayName,
             createdOn: new Date(),
             updatedOn: new Date(),
-            locations : null
         }).then( () => {
             dispatch({ type: 'CREATE_EVENT', event});
         }).catch( (err) =>{
@@ -116,5 +115,15 @@ export const resetCurrentEvent = () => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
 
     dispatch({ type: 'RESET_CURRENT_EVENT'});
+    }
+}
+
+export const setActiveEventMenuItem = (activeItem) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log("settting current active item")
+        
+        dispatch({ type: 'SET_ACTIVE_EVENT_MENU_ITEM', activeItem });
+
     }
 }

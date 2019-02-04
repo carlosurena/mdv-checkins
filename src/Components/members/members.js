@@ -7,7 +7,8 @@ import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import {Redirect} from 'react-router-dom'
-
+import { updateMembersList } from '../../store/actions/memberactions'
+import { Button } from 'semantic-ui-react'
 class Members extends Component {
   state = {
 
@@ -16,53 +17,42 @@ class Members extends Component {
   componentDidMount() {
     // Auto initialize all the things!
     M.AutoInit();
-  }
-  addMember = (member) => {
-    member.id = Math.random();
-
-    let newMemberList = [...this.state.members, member];
-    console.log(newMemberList);
-    this.setState(prevState => ({
-      members: [...prevState.members, member]
-    }))
-    //console.log(this.state);
+    this.props.updateMembersList();
+    console.log('component remounted')
   }
 
-  deleteMember = (id) => {
-    let members = this.state.members.filter(member => {
-      return member.id !== id
-    });
+  componentDidUpdate(prevProps){
+    // console.log(prevProps.sheet,this.props.sheet)
+    console.log('component did update', prevProps.members,this.props.members)
 
-    this.setState({
-      members: members
-    })
-  }
+    if(prevProps.members && this.props.members){
+      if(prevProps.members.length !== this.props.members.length){
+        console.log('discrepancy in size')
+        //this.updateList()
+    }
+    }
+     
+ }
 
-  handleModal = (e) => {
-
-  }
   render() {
     const { members, user } = this.props
     if(user.isEmpty) return <Redirect to='/signin' />
     if(members) console.log('we have '+ members.length +' members')
     return (
       <div className="members-page">
-        <div className="section green">
-          <div className="row container">
-            <button data-target="addMemberModal" className="btn modal-trigger right waves-effect" onClick={this.handleModal}>
-              <i className="material-icons">person_add</i>
-              <p>New Member</p>
-            </button>
-
+        
+          <div className="ui teal inverted segment">
+            <AddMember />
           </div>
-        </div>
+        
 
-        <div className="section">
-          <div className="container">
+        <div className="ui centered grid container">
+          <div className="sixteen wide column ">
             <SearchMember members={members} />
-            <MembersTable deleteMember={this.deleteMember} members={members} />
+            <MembersTable  members={members} />
           </div>
-          <AddMember />
+          <div className="column">
+          </div>
 
         </div>
       </div>
@@ -77,10 +67,15 @@ const mapStateToProps = (reduxState) => {
     user: reduxState.firebase.auth
   }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateMembersList: () => dispatch(updateMembersList())
+  }
+}
 
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
-    { collection: 'members', queryParams: [ 'orderByChild=first_name' ] }
+    { collection: 'members'  }
   ])
 )(Members);

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
+import { Card, Icon, Header } from 'semantic-ui-react'
 
 const EventsList = ({events}) => {
 
@@ -12,14 +13,32 @@ const EventsList = ({events}) => {
                 {events && events.map(event =>{
                     return( 
 
-                            <div className="card z-depth-1" key={event.id}>
-                                <div className="card-content">
-                                    <Link to={"/event/"+event.id}><span className="card-title">{event.title}</span></Link>
-                                    <p>Type: {event.isRecurring ? "Recurring":"Single Event"}</p>
-                                    <p> Created on: {(new Date(event.createdOn.toDate()).toLocaleString().split(",")[0])}</p>
-                                    <p> Day of Week: {event.weekday}</p>
-                                </div>
-                            </div> 
+                            
+                        <Card key={event.id}>
+                            <Card.Content>
+                                <Header><Link to={"/event/"+event.id}>{event.title}</Link></Header>
+                            </Card.Content>
+                            <Card.Content description={
+                                event.isRecurring ? (<div>
+                                    <p>Recurring Event</p>
+                                    <p>Weekday: {event.weekday}</p>
+                                    </div>) :
+                                    (
+                                        <div>
+                                            <p>
+                                                Single Event
+                                            </p>
+                                        </div>
+                                    )
+                            } />
+                            <Card.Content extra>
+                            <Icon name='user' />
+                            Creator here
+                            </Card.Content>
+                        </Card>
+                                
+
+                            
                     )})
                 }
         

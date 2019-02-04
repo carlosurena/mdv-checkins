@@ -11,6 +11,8 @@ import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { deleteEvent } from '../../store/actions/eventactions'
 import { createLocation } from '../../store/actions/locationactions'
+import EventMenu from './eventMenu'
+import EventSheets from './eventSheets'
 
 class Event extends Component{
 
@@ -53,62 +55,39 @@ class Event extends Component{
         }
         const currentPath = "/event/" + this.state.id + "/";
         const { event } = this.props
+        var eventTab;
+        if(this.props.activeItem === 'Info'){
+            eventTab = <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>
+        }else if(this.props.activeItem === 'Locations'){
+            eventTab = <EventLocations eventID={this.state.id} event={this.props.event} creator={this.state.creator} locations={this.props.locations} handleCreateLocation= {() =>{this.handleCreateLocation()}}/>
+        }else if(this.props.activeItem === 'Reports'){
+            eventTab = null
+        }
         const eventRender = event ? (
             <div className="">
-                <div className="section green">
-                        <div className="row valign-wrapper">
-                            <div className="col s12 m4">
-                                <h3>{event.title}</h3>
-                            </div>
-                            <div className="col s12 m8">
-                                <div className="valign-wrapper">
-                                
-                                <Button primary color='red' onClick={this.handleDeleteEvent} content='Delete Event' />
+                <div className="ui inverted teal segment">
+                            <div className="">
+                                <div className="">
+                                    <h3>{event.title}</h3>
                                 </div>
-                                
-                            </div> 
-                        </div>
+                                <div className="">
+                                    
+                                    <Button negative onClick={this.handleDeleteEvent} content='Delete Event' />
+                                    
+                                </div> 
+                            </div>
                 </div>
 
-                    <div className="row event-details-content">
-                    <div className="col s12 m3 grey lighten-4 details-sidebar">
-                            <ul>
-                                <NavLink to={currentPath+"stats"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">create</i>
-                                    <span> Information</span>
-                                </li></NavLink>
-                                <NavLink to={currentPath+"locations"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">access_time</i>
-                                    <span> Locations</span>
-                                </li></NavLink>
-                                <NavLink to={currentPath+"sheets"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">assessment</i>
-                                    <span> Attendance Sheets</span>
-                                </li></NavLink>
-                                <NavLink to={currentPath+"reports"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">assessment</i>
-                                    <span> Reports</span>
-                                </li></NavLink>
-                                
-                            </ul>
-                        </div>
-                        <div className="col s12 m9 grey lighten-5 details-content">
-                           
-                                <Switch>
-                                    <Route exact path={currentPath} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
-                                    <Route exact path={currentPath+"stats"} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
-                                    <Route exact path={currentPath+"locations"} render={() => <EventLocations  id={this.state.id} event={this.props.event} creator={this.state.creator} locations={this.props.locations} handleCreateLocation= {() =>{this.handleCreateLocation()}}/>} />
-                                    <Route exact path={currentPath+"reports"} render={() => <EventStats  id={this.state.id} event={this.props.event} creator={this.state.creator}/>} />
-                                </Switch>
-                                
-                            
-                        </div>
-                    </div>
+                <EventMenu />
+                <div>
+                    {eventTab}
+                </div>
+
                 
                 
             </div>
         ) : (
-            <div className="center">Could not find the requested event (EVENT ID: {this.state.id})</div>
+            <div className="">Could not find the requested event: {this.state.id}</div>
             )
         return(
            
@@ -130,11 +109,12 @@ const mapStateToProps = (reduxState, ownProps) =>{
 
     const locations = reduxState.firestore.ordered.locations
     //const location = events[id].locations ? events[id].locations : null
-    console.log('loc ',locations)
+    console.log('reduxstate ',reduxState)
     return {
         user : reduxState.firebase.auth,
         event : event,
-        locations : locations
+        locations : locations,
+        activeItem : reduxState.event.activeItem
     }
 }
 
