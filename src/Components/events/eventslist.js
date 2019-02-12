@@ -8,7 +8,7 @@ const EventsList = ({events}) => {
    // console.log(props);
         return(
             
-            <div>
+            <div className="inline">
                 {console.log(events)}
                 {events && events.map(event =>{
                     return( 

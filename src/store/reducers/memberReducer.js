@@ -1,11 +1,6 @@
 const initState = {
-    members: [
-        { fname: "John", lname: "Mason", gender: "M", dob: "12/1/2000", ministry: "Alabanza", phone: "2035348274", id: 1 },
-        { fname: "Jason", lname: "Carmack", gender: "M", dob: "11/15/1996", ministry: "PowerKids", phone: "2035847365", id: 2 },
-        { fname: "Raven", lname: "Patrice", gender: "F", dob: "4/08/1998", ministry: "Danza", phone: "2035906839", id: 3 },
-        { fname: "Benorqui", lname: "Houdini", gender: "F", dob: "3/24/2000", ministry: "Hartistas", phone: "2038693058", id: 4 }
-
-    ]
+    members: [],
+    activeItem: 'Info',
 };
 
 const memberReducer = (state = initState, action) => {
@@ -34,6 +29,12 @@ const memberReducer = (state = initState, action) => {
         case 'SEARCH_MEMBER_ERROR':
             console.log("There was en error finding the member", action.error);
             return state;
+        case 'SET_ACTIVE_MEMBER_MENU_ITEM':
+            console.log("active item set");
+            return{
+                 ...state,
+                activeItem: action.activeItem
+            }
         default:
             return state;
 

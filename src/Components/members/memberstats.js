@@ -63,11 +63,12 @@ class MemberStats extends Component {
 
     const stats = this.state.isEditing ? (
       <div>
-        <div className="container section">
-          <div className="card">
-            <div className="card-content">
+      <div className="basic segment"></div>
+        <div className="">
+          <div className="ui card">
+            <div className="ui card content">
               <form onSubmit={this.handleFormSubmit}>
-                <div className="input-field">
+                <div className="input ">
                   <label className='active' htmlFor="first_name">First name</label>
 
                   <input type="text" id="first_name" defaultValue={member.first_name} onChange={this.handleInputChange} />
@@ -125,9 +126,9 @@ class MemberStats extends Component {
 
     ) : (
 
-        <div className="container section">
-          <div className="card">
-            <div className="card-content">
+        <div className="">
+          <div className="ui card">
+            <div className="ui card content">
               <div>General Information</div>
               <div className="">{member.first_name} {member.last_name}</div>
               <div className="">Gender: {member.gender}</div>
@@ -155,14 +156,9 @@ class MemberStats extends Component {
 }
 
 const mapStateToProps = (reduxState, ownProps) => {
-  console.log(reduxState)
-  const id = ownProps.match.url.split("/")[2];
-  console.log(id)
-  const members = reduxState.firestore.data.members
-  const member = members[id]
-  return {
-    member: member
-  }
+return {
+
+}
 }
 export default compose(
   connect(mapStateToProps),

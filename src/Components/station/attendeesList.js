@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PersonDetailsModal from './personDetailsModal'
-
+import { Button } from 'semantic-ui-react'
 class AttendeesList extends Component {
     state ={
         attendeeData : [],
@@ -31,6 +31,8 @@ class AttendeesList extends Component {
             members.find( member => {
                 if(member.id == attendee.attendeeID){
                     //console.log("member matched with attendee ID", member, attendee)
+                    member.checkInDate = attendee.checkInDate;
+                    member.checkOutDate = attendee.checkOutDate;
                     this.setState(prevState => ({
                         attendeeData: [...prevState.attendeeData, member]
                       }))
@@ -47,7 +49,9 @@ class AttendeesList extends Component {
                     <thead>
                     <tr>
                         <th className="">Name</th>
-                        <th className="">Age</th>
+                        <th className="">Check-In</th>
+                        <th className="">Check-Out</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -55,7 +59,22 @@ class AttendeesList extends Component {
                         return (
                             <tr className="member" key={attendee.id}>
                                 <td><PersonDetailsModal attendee={attendee} /></td>
-                                <td>{Math.abs(new Date(Date.now() - attendee.dob.toDate()).getUTCFullYear() - 1970 )}</td>
+                                <td>{(attendee.checkInDate) ? 
+                                        (   
+                                            (new Date(attendee.checkInDate.toDate()).toLocaleString().split(",")[1])
+                                        ) : 
+                                        (
+                                            "-"
+                                        )
+                                    }</td>
+                                <td>{(attendee.checkOutDate) ? 
+                                        (   
+                                            (new Date(attendee.checkOutDate.toDate()).toLocaleString().split(",")[1])
+                                        ) : 
+                                        (
+                                            <Button negative>Check out</Button>
+                                        )
+                                    }</td>
                                 
 
                             </tr>

@@ -88,3 +88,13 @@ export const updateMembersList = () => {
 
     }
 }
+
+export const setActiveMemberMenuItem = (activeItem) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        console.log("settting current active item")
+        
+        dispatch({ type: 'SET_ACTIVE_MEMBER_MENU_ITEM', activeItem });
+
+    }
+}

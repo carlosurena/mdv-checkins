@@ -38,22 +38,21 @@ handleBack = (e) => {
   render() {
     const { eventID, members, currentLocation, currentSheet } = this.props
     return(
-        <div className="">
+        <div className="ui container">
+          <div className="ui basic segment"></div>
+
                 {currentLocation ? (
                     (currentSheet? (
                       <div>
-                        <p>selected sheet</p>
                         <Button onClick={this.handleBack}>Back</Button>
                         <AttendeesList members={members} sheet={currentSheet}/>
                       </div>                    ) : (
                       <div>
-                        <p>list of sheets for {currentLocation.title}</p>
                         <EventSheetsList handleSheetSelect={ (sheet) =>{this.handleSheetSelect(sheet)} }  eventID={eventID}  locationID={currentLocation.id} />
                       </div>                    ))
                     ) : 
                     (
                       <div>
-                        <p>list of locations (current location not selected)</p>
                         <EventLocationsList handleLocationSelect={ (location) =>{this.handleLocationSelect(location)} } eventID={eventID} />
                         <Button onClick={() =>{this.props.handleCreateLocation()}} >Add Location</Button>
                       </div>

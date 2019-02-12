@@ -4,25 +4,18 @@ import { Redirect } from 'react-router-dom'
 
 class Account extends Component {
   render() {
-    const {user} = this.props
-    if(user.isEmpty) return <Redirect to='/signin' />
-    var loginProvider = 'N/A'
-    console.log(user.providerData[0].providerId)
-    if(user.providerData[0].providerId === 'facebook.com') {
-        loginProvider = 'Facebook'
-    }else if(user.providerData[0].providerId === 'google.com'){
-        loginProvider = 'Google'
-
-    }
+    const {user, auth} = this.props
+    if(auth.isEmpty) return <Redirect to='/signin' />
+    
     return (
       <div>
         <div>
-            <img src={user.photoURL} alt=""/>    
-            <p>User logged in as: {user.displayName}</p>
-            <p>email: {user.email} </p>
-            <p>Login Provider: {loginProvider}</p>
+            <img src={user && user.photoURL} alt=""/>    
+            <p>User logged in as: {user && (user.first_name +" "+ user.last_name)}</p>
+            <p>email: {user && user.email} </p>
+            <p>Login Provider: {user && user.provider}</p>
             <p>First Time login?: Not Implemented yet</p>
-            <p>Access Level: Not Implemented yet</p>
+            <p>Access Level: {user && user.accessLevel}</p>
             
         </div>
       </div>
@@ -33,7 +26,8 @@ class Account extends Component {
 const mapStateToProps = (reduxState) =>{
 
     return{
-        user : reduxState.firebase.auth
+        auth : reduxState.firebase.auth,
+        user : reduxState.auth.user
     }
 }
 export default connect(mapStateToProps)(Account)

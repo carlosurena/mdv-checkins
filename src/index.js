@@ -10,10 +10,7 @@ import thunk from 'redux-thunk'
 import { reduxFirestore, getFirestore } from 'redux-firestore'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import firebase from './firebase/firebase'
-//import 'materialize-css/dist/css/materialize.css'
-import M from 'materialize-css'
 
-M.AutoInit();
 const store = createStore(rootReducer, 
     compose(
         applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),

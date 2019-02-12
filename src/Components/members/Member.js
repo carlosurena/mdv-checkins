@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { deleteMember } from '../../store/actions/memberactions';
-
+import MemberMenu from './memberMenu'
 //var db = firebase.firestore();
 class Member extends Component{
 
@@ -44,67 +44,48 @@ class Member extends Component{
 
     }
     render(){
-        const { user } = this.props
-        if(user.isEmpty) return <Redirect to='/signin' />
-        if(this.state.memberDeleted === true){
+        const { user, auth } = this.props
+        if(auth.isEmpty) return <Redirect to='/signin' />
+        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
+        if(this.state.eventDeleted === true){
             return <Redirect to='/members'/>
         }
-        const memberID = this.props.match.params.member_id;
-        const currentPath = "/member/" + memberID + "/";
-        const { member} = this.props
-        
-        console.log('member props',this.props)
+        const currentPath = "/member/" + this.state.id + "/";
+        const { member } = this.props
+        var memberTab;
+        console.log('member tab active item', this.props.activeItem)
+        if(this.props.activeItem === 'Info'){
+            memberTab = <MemberStats member={member} />
+        }else if(this.props.activeItem === 'Other'){
+            memberTab = null
+        }else if(this.props.activeItem === 'Reports'){
+            memberTab = null
+        }
         const memberRender = member ? (
             <div className="">
-                <div className="section green">
-                    <div className="row valign-wrapper">
-                        <div className="col s12 m4">
-                            <h3>{member.first_name + " " + member.last_name}</h3>
-                        </div>
-                        <div className="col s12 m8">
-                            <div className="valign-wrapper">
-                               
-                            <Button primary color='red' onClick={this.handleDeleteMember} content='Delete Member' />
+                <div className="ui inverted teal segment">
+                            <div className="">
+                                <div className="">
+                                    <h3>{member.first_name} {member.last_name}</h3>
+                                </div>
+                                <div className="">
+                                    
+                                    <Button negative onClick={this.handleDeleteMember} content='Delete Member' />
+                                    
+                                </div> 
                             </div>
-                            
-                        </div> 
-                    </div>
                 </div>
 
-                    <div className="row event-details-content">
-                        <div className="col s12 m3 grey lighten-4 details-sidebar">
-                            <ul>
-                                <NavLink to={currentPath+"stats"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">create</i>
-                                    <span> Information</span>
-                                </li></NavLink>
-                                <NavLink to={currentPath+"checkins"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">access_time</i>
-                                    <span> Check-Ins</span>
-                                </li></NavLink>
-                                <NavLink to={currentPath+"reports"}><li className="valign-wrapper">
-                                    <i className="material-icons prefix">assessment</i>
-                                    <span> Reports</span>
-                                </li></NavLink>
-                                
-                            </ul>
-                        </div>
-                        <div className="col s12 m9 grey lighten-5 details-content">
-                                <Switch>
-                                    <Route exact path={currentPath} component={MemberStats} />
-                                    <Route exact path={currentPath+"stats"} component={MemberStats} />
-                                    <Route exact path={currentPath+"checkins"} component={MemberStats}  />
-                                    <Route exact path={currentPath+"reports"}  component={MemberStats} />
-                                </Switch>
-                                
-                            
-                        </div>
-                    </div>
+                <MemberMenu />
+                <div className="ui container">
+                    {memberTab}
+                </div>
+
                 
                 
             </div>
         ) : (
-            <div className="center">Could not find the requested member (member ID: {this.props.match.params.member_id})...</div>
+            <div className="">Could not find the requested member: {this.state.id}</div>
             )
         return(
             <BrowserRouter>
@@ -124,7 +105,9 @@ const mapStateToProps = (reduxState,ownProps) =>{
     const member = members ? members[id] : null
     return {
         member : member,
-        user : reduxState.firebase.auth
+        auth : reduxState.firebase.auth,
+        user: reduxState.auth.user,
+        activeItem: reduxState.member.activeItem
         
 
     }

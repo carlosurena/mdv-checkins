@@ -17,8 +17,9 @@ class Events extends Component {
 
     }
     render(){
-        const {user } = this.props
-        if(user.isEmpty) return <Redirect to='/signin' />
+        const {user,auth } = this.props
+        if(auth.isEmpty) return <Redirect to='/signin' />
+        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
         return(
             <div className="">
                 <div className="ui teal inverted segment">
@@ -48,7 +49,8 @@ const mapStateToProps = (reduxState) =>{
     console.log(reduxState)
     return {
         events: reduxState.firestore.ordered.events,
-        user: reduxState.firebase.auth
+        auth: reduxState.firebase.auth,
+        user: reduxState.auth.user
     }
   }
   

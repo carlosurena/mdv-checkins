@@ -2,8 +2,10 @@ import React, {Component} from 'react'
 import {Link, NavLink } from 'react-router-dom'
 import {connect} from 'react-redux'
 import SignedInLinks from './SignedInLinks'
+import AdminLinks from './AdminLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { logOut } from '../../store/actions/authActions'
+import PendingUserLinks from './PendingUserLinks';
 
 
 class Navbar extends Component{
@@ -15,13 +17,21 @@ class Navbar extends Component{
    
     }
     render(){
+        const { auth, user,logOut } = this.props
+        var link;
+        if(user && user.accessLevel == 'pending'){
+            link = <PendingUserLinks logOut={this.props.logOut}/>
+        }else if(user && user.accessLevel == 'admin'){
+            link = <AdminLinks logOut= {this.props.logOut}/>
+
+        }
         return(
             <div>
                 {
-                    this.props.user.isEmpty ? (
+                    auth.isEmpty ? (
                         <SignedOutLinks />
                     ):(
-                        <SignedInLinks logOut={this.props.logOut} />
+                        link
                     )
                 }
                 
@@ -36,7 +46,8 @@ const mapStateToProps = (reduxState) =>{
     //console.log('redux state',reduxState)
 
     return{
-        user: reduxState.firebase.auth
+        auth: reduxState.firebase.auth,
+        user: reduxState.auth.user
     }
 }
 const mapDispatchToProps = (dispatch) =>{

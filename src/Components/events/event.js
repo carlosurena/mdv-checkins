@@ -48,8 +48,9 @@ class Event extends Component{
     }
 
     render(){
-        const { user } = this.props
-        if(user.isEmpty) return <Redirect to='/signin' />
+        const { user,auth } = this.props
+        if(auth.isEmpty) return <Redirect to='/signin' />
+        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
         if(this.state.eventDeleted === true){
             return <Redirect to='/events'/>
         }
@@ -111,7 +112,8 @@ const mapStateToProps = (reduxState, ownProps) =>{
     //const location = events[id].locations ? events[id].locations : null
     console.log('reduxstate ',reduxState)
     return {
-        user : reduxState.firebase.auth,
+        auth : reduxState.firebase.auth,
+        user : reduxState.auth.user,
         event : event,
         locations : locations,
         activeItem : reduxState.event.activeItem

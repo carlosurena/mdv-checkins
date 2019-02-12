@@ -5,9 +5,13 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
 class Checkins extends Component {
+  state = {
+
+  }
   render() {
-    const {user} = this.props
-    if(user.isEmpty) return <Redirect to='/signin' />
+    const {user, auth} = this.props
+    if(auth.isEmpty) return <Redirect to='/signin' />
+    if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
     
     return (
       <div className="ui">
@@ -21,11 +25,11 @@ class Checkins extends Component {
         <div className="ui container">
           <div className="">
             <h3>
-              {this.props.user ? ("Welcome, "+this.props.user.displayName+ "!"):(null)}
+              {user ? ("Welcome, "+user.first_name+ "!"):(null)}
             </h3>
           </div>
             <div className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore itaque vitae reprehenderit corrupti cumque exercitationem autem dolor enim facere iure, illo tenetur soluta ab quisquam rerum deserunt beatae officia veniam!
+              {user ? user.accessLevel : ''}
             </div>
         </div>
       </div>
@@ -36,7 +40,8 @@ class Checkins extends Component {
 const mapStateToProps = (reduxState) => {
   console.log(reduxState)
   return{
-      user : reduxState.firebase.auth
+      auth : reduxState.firebase.auth,
+      user : reduxState.auth.user
   }
 }
 

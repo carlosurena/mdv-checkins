@@ -2,7 +2,7 @@ export const createEvent = (event,user) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         //make async call to database
 
-        
+        console.log('creating event')
         const firestore = getFirestore();
         //const creatorRef = firestore.collection('users').doc(user.uid)
         firestore.collection('events').add({

@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 import MembersTable from './memberstable';
 import AddMember from './addMember.js';
 import SearchMember from './searchMember'
-import M from "materialize-css";
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import {Redirect} from 'react-router-dom'
 import { updateMembersList } from '../../store/actions/memberactions'
 import { Button } from 'semantic-ui-react'
+import AccessRequests from '../auth/accessRequests'
 class Members extends Component {
   state = {
-
-
+    viewRequests : false
   }
   componentDidMount() {
-    // Auto initialize all the things!
-    M.AutoInit();
     this.props.updateMembersList();
     console.log('component remounted')
   }
@@ -35,8 +32,9 @@ class Members extends Component {
  }
 
   render() {
-    const { members, user } = this.props
-    if(user.isEmpty) return <Redirect to='/signin' />
+    const { members, user, auth , requests } = this.props
+    if(auth.isEmpty) return <Redirect to='/signin' />
+    if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
     if(members) console.log('we have '+ members.length +' members')
     return (
       <div className="members-page">
@@ -46,15 +44,41 @@ class Members extends Component {
           </div>
         
 
+        { (!this.state.viewRequests) ? 
+        (
         <div className="ui centered grid container">
           <div className="sixteen wide column ">
+            <a onClick={() => this.setState({ viewRequests: true})}><div className="ui warning message">
+                <div className="header">
+                  You have pending access level requests.
+                </div>
+                <p>Please click here to review them.</p>
+              </div>
+            </a>
+            <div className="ui divider"></div>
             <SearchMember members={members} />
+            <div className="ui hidden divider"></div>
             <MembersTable  members={members} />
           </div>
           <div className="column">
           </div>
 
         </div>
+        ) 
+        :
+        (
+          <div className="ui centered grid container">
+            <div className="sixteen wide column">
+              <Button onClick={() => this.setState({ viewRequests: false})}>Back</Button>
+              <div className="ui hidden divider"></div>
+              <div>
+                <AccessRequests requests={requests} members = {members} />
+              </div>
+            </div>
+
+          </div>
+        )
+        }
       </div>
     );
   }
@@ -64,7 +88,9 @@ const mapStateToProps = (reduxState) => {
   console.log('reduxstate',reduxState)
   return {
     members: reduxState.firestore.ordered.members,
-    user: reduxState.firebase.auth
+    auth: reduxState.firebase.auth,
+    user: reduxState.auth.user,
+    requests : reduxState.firestore.ordered.requests
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -76,6 +102,7 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
-    { collection: 'members'  }
+    { collection: 'members'  },
+    { collection : 'requests'}
   ])
 )(Members);

@@ -10,7 +10,11 @@ import Station from './Components/station/station';
 import Event from './Components/events/event';
 import SignIn from './Components/auth/signin';
 import SignUp from './Components/auth/signup';
-import Account from './Components/auth/account'
+import Account from './Components/auth/account';
+import PendingUser from './Components/auth/pendinguser'
+import { connect } from 'react-redux';
+import { loadUser } from './store/actions/authActions'
+
 
 
 class App extends Component {
@@ -18,7 +22,9 @@ class App extends Component {
 
    
   }
-
+  componentDidMount(){
+    this.props.loadUser()
+  }
   
   render() {
     return (
@@ -32,6 +38,8 @@ class App extends Component {
             <Route exact path="/members" component={Members}  />
             <Route exact path="/events" component={Events} />
             <Route exact path="/account" component={Account} />
+            <Route exact path="/pendinguser" component={PendingUser} />
+
 
             <Route exact path="/station" component={Station} />
             <Route exact path="/signin" component={SignIn} />
@@ -45,4 +53,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) =>{
+  return{
+      loadUser : () => dispatch(loadUser()),
+      
+  }
+}
+export default connect(null,mapDispatchToProps)(App);
