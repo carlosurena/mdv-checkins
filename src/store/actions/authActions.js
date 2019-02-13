@@ -67,8 +67,7 @@ export const loginGoogle = () => {
 }
 export const loginFacebook = () => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
-        //make async call to database
-        console.log("logging in via fb")
+        console.log("logging in via Facebook")
 
         const firebase = getFirebase();
         const firestore = getFirestore();
@@ -79,10 +78,12 @@ export const loginFacebook = () => {
             const isNewUser = result.additionalUserInfo.isNewUser
             console.log("is this a new user?: ", result.additionalUserInfo.isNewUser, user, additionalUserInfo);
             if (isNewUser) {
+                console.log('creating new user and sending to firestore', user, additionalUserInfo)
+
                 firestore.collection('users').add({
                     accessLevel: 'pending',
-                    first_name: additionalUserInfo.profile.first_name,
-                    last_name: additionalUserInfo.profile.last_name,
+                    first_name: additionalUserInfo.profile.given_name,
+                    last_name: additionalUserInfo.profile.family_name,
                     email: additionalUserInfo.profile.email,
                     photoURL: user.photoURL,
                     phone: user.phoneNumber,
@@ -92,10 +93,27 @@ export const loginFacebook = () => {
                     createdOn: new Date(),
                     updatedOn: new Date(),
                 }).then((user) => {
+                    console.log('user data sent success')
                     user.get().then((doc) => {
                         const data = doc.data()
                         console.log(data)
                         dispatch({ type: 'CREATE_USER', data });
+                        //Create Access Level Request
+                        firestore.collection('requests').add({
+                            userRef: doc.id,
+                            userName: data.first_name + " " + data.last_name,
+                            accessLevel: 'pending',
+                            requestedAccessLevel: 'volunteer',
+                            createdOn: new Date(),
+                            updatedOn: new Date()
+                        }).then((request) => {
+                            request.get().then((doc) => {
+                                const data = doc.data()
+                                console.log("access request ", data)
+                                dispatch({ type: 'CREATE_ACCESS_REQUEST', data });
+                            })
+                        })
+
                     })
 
                 }).catch((err) => {

@@ -76,6 +76,7 @@ class AccessRequestCard extends Component {
                                 <div className="centered column ui segment">
                                     <p>Link to a member:</p>
                                     <SearchRequest personSelected={(memberRef) => { this.personSelected(memberRef) }} members={members} />
+                                       
                                 </div>
                             )
                         }
