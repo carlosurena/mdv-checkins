@@ -6,7 +6,7 @@ import AdminLinks from './AdminLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { logOut } from '../../store/actions/authActions'
 import PendingUserLinks from './PendingUserLinks';
-
+import VolunteerLinks from './VolunteerLinks'
 
 class Navbar extends Component{
     
@@ -23,7 +23,8 @@ class Navbar extends Component{
             link = <PendingUserLinks logOut={this.props.logOut}/>
         }else if(user && user.accessLevel == 'admin'){
             link = <AdminLinks logOut= {this.props.logOut}/>
-
+        }else if(user && user.accessLevel == 'volunteer'){
+            link = <VolunteerLinks logOut= {this.props.logOut}/>
         }
         return(
             <div>
