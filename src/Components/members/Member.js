@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {NavLink, Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
+import {BrowserRouter, Redirect} from 'react-router-dom'
 import MemberStats from './memberstats'
-import { Select,Button } from 'semantic-ui-react'
+import { Button,Icon, Image, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
@@ -46,13 +46,12 @@ class Member extends Component{
     render(){
         const { user, auth } = this.props
         if(auth.isEmpty) return <Redirect to='/signin' />
-        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
-        if(user && user.accessLevel == 'volunteer') return <Redirect to='/' />
+        if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
+        if(user && user.accessLevel === 'volunteer') return <Redirect to='/' />
 
         if(this.state.eventDeleted === true){
             return <Redirect to='/members'/>
         }
-        const currentPath = "/member/" + this.state.id + "/";
         const { member } = this.props
         var memberTab;
         console.log('member tab active item', this.props.activeItem)
@@ -63,15 +62,56 @@ class Member extends Component{
         }else if(this.props.activeItem === 'Reports'){
             memberTab = null
         }
+
+        var memberTypeOptions = [{ key: 'Arabic', text: 'Arabic', value: 'Arabic' }, { key: 'Arabic', text: 'Arabic', value: 'Arabic' }];
+
         const memberRender = member ? (
             <div className="">
                 <div className="ui inverted teal segment">
-                            <div className="">
-                                <div className="">
-                                    <h3>{member.first_name} {member.last_name}</h3>
+                            <div className="ui center aligned padded grid">
+                                <div className="row">
+                                    <div className="column">
+                                        <Image size='tiny' circular centered src='https://react.semantic-ui.com/images/wireframe/square-image.png'></Image>
+                                    </div>
                                 </div>
-                                <div className="">
+                                <div className="row">
+                                    <h2>{member.first_name} {member.last_name}</h2>
                                     
+                                </div>
+                                
+                                <div className="row">
+                                    { (member.email) ? (
+                                        <div className="column">
+                                            <Icon name='mail'>
+                                            </Icon>
+                                            {member.email}
+                                        </div>                                    ):
+                                    (
+                                        null
+                                    )}
+                                    { (member.phone) ? (
+                                        <div className="column">
+                                            <Icon flipped='horizontally' name='phone'>
+                                            </Icon>
+                                            {member.phone}
+                                        </div>
+                                    ):
+                                    (
+                                        null
+                                    )}
+                                </div>
+                                <div className="row">
+                                <Dropdown
+                                    button
+                                    className='icon'
+                                    floating
+                                    labeled
+                                    icon='world'
+                                    options={memberTypeOptions}
+                                    search
+                                    text='Select Language'
+                                />
+
                                     <Button negative onClick={this.handleDeleteMember} content='Delete Member' />
                                     
                                 </div> 

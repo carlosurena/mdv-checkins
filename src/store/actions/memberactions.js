@@ -76,7 +76,6 @@ export const updateMembersList = () => {
         const firestore = getFirestore();
         firestore.collection('members').get().then( (members) =>{
             var data = members.docs.map( doc => {
-                const member = doc.data()
                 return{
                     ...doc.data(),
                     id: doc.id

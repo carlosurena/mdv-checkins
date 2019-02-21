@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
-import {Link, NavLink } from 'react-router-dom'
 import {connect} from 'react-redux'
-import SignedInLinks from './SignedInLinks'
 import AdminLinks from './AdminLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { logOut } from '../../store/actions/authActions'
@@ -17,13 +15,13 @@ class Navbar extends Component{
    
     }
     render(){
-        const { auth, user,logOut } = this.props
+        const { auth, user } = this.props
         var link;
-        if(user && user.accessLevel == 'pending'){
+        if(user && user.accessLevel === 'pending'){
             link = <PendingUserLinks logOut={this.props.logOut}/>
-        }else if(user && user.accessLevel == 'admin'){
+        }else if(user && user.accessLevel === 'admin'){
             link = <AdminLinks logOut= {this.props.logOut}/>
-        }else if(user && user.accessLevel == 'volunteer'){
+        }else if(user && user.accessLevel === 'volunteer'){
             link = <VolunteerLinks logOut= {this.props.logOut}/>
         }
         return(

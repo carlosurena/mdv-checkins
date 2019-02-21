@@ -4,9 +4,8 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import StationSearch from './stationSearch'
 import AttendeesList from './attendeesList'
-import { getTodaySheetFromSelection,createSheet, addAttendee, setCurrentSheet, updateCurrentSheet, checkOutAttendee } from '../../store/actions/sheetActions'
+import { getTodaySheetFromSelection, addAttendee, setCurrentSheet, updateCurrentSheet, checkOutAttendee } from '../../store/actions/sheetActions'
 import { Button } from 'semantic-ui-react'
-import AddMember from '../members/addMember'
 
 
 class StationCheckin extends Component {
@@ -47,7 +46,7 @@ class StationCheckin extends Component {
     
 
   render() {
-    const { sheets, currentDate, members, currentSheet, isCheckingOut } = this.props
+    const { members, currentSheet, isCheckingOut } = this.props
     return (
       <div className="column">
         {

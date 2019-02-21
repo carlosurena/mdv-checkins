@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
-import { Button, Select, Radio, Form } from 'semantic-ui-react'
+import { Button, Select, Icon} from 'semantic-ui-react'
 
 class MemberStats extends Component {
 
@@ -55,6 +55,16 @@ class MemberStats extends Component {
 
   render() {
     const { member } = this.props
+
+    var fullGender;
+    if(member.gender && member.gender === 'F'){
+      fullGender = 'Female'
+    }else if(member.gender && member.gender === 'M'){
+      fullGender = 'Male'
+    }else{
+      fullGender = 'N/A'
+    }
+    var age = Math.abs(new Date(Date.now() - member.dob.toDate().getTime()).getUTCFullYear() - 1970);
     const membershipOptions = [
       { key: 'Visitor', value: 'Visitor', text: 'Visitor', text_esp: 'Visita' },
       { key: 'RegularVisitor', value: 'RegularVisitor', text: 'Regular Visitor', text_esp: 'Visita Regular' },
@@ -126,18 +136,37 @@ class MemberStats extends Component {
 
     ) : (
 
-        <div className="">
-          <div className="ui card">
-            <div className="ui card content">
-              <div>General Information</div>
-              <div className="">{member.first_name} {member.last_name}</div>
-              <div className="">Gender: {member.gender}</div>
-              <div className="">Phone Number: {member.phone}</div>
-              <div className="">Birthdate: {(new Date(member.dob.toDate()).toLocaleString().split(",")[0])}</div>
-              <div className="d">Member Type: {member.type}</div>
-              <Button primary onClick={this.handleButtonClick}>Edit</Button>
+        <div className="ui padded grid">
+          <div className="row">
+            <div className="ui segment column">
+              <div className="">
+                <h2>General Information</h2>
+                <div className="ui equal width grid">
+                  <div className="column">
+                    <div className="">{fullGender}</div>
+                    <div className="">{age} years old ({(new Date(member.dob.toDate()).toLocaleString().split(",")[0])})</div>
+                    <div className="d">Member Type: {member.type}</div>
+                  </div>
+                  <div className="column">
+                  <div className="">
+                    <Icon flipped='horizontally' name='phone'></Icon>
+                    {member.phone}
+                  </div>
+                  <div className="">
+                    <Icon name='mail'></Icon>
+                    {member.email}
+                  </div>
+
+
+                  </div>
+                </div>
+                
+                
+                <Button primary onClick={this.handleButtonClick}>Edit</Button>
+              </div>
             </div>
           </div>
+          
         </div>
 
       )

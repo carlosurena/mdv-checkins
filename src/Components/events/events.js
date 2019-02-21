@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import EventsList from './eventslist';
 import CreateEvent from './createEvent';
 import { connect } from 'react-redux'
@@ -19,8 +18,8 @@ class Events extends Component {
     render(){
         const {user,auth } = this.props
         if(auth.isEmpty) return <Redirect to='/signin' />
-        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
-        if(user && user.accessLevel == 'volunteer') return <Redirect to='/' />
+        if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
+        if(user && user.accessLevel === 'volunteer') return <Redirect to='/' />
 
         return(
             <div className="">

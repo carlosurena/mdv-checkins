@@ -212,7 +212,6 @@ export const getSheetsFromLocation = (locationRef,eventRef) => {
 
         sheetRef.get().then( sheets => {
             var data = sheets.docs.map( doc => {
-                const sheet = doc.data()
                 return{
                     ...doc.data(),
                     id: doc.id

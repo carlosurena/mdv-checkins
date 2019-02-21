@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import EventStats from './eventstats';
 import EventLocations from './eventlocations';
-import EventReports from './eventreports';
-import EventEdit from './eventedit';
-import {NavLink, Route, Switch, BrowserRouter, Redirect} from 'react-router-dom';
-import firebase from '../../firebase/firebase'
+import {BrowserRouter, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import { compose } from 'redux'
@@ -12,7 +9,6 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { deleteEvent } from '../../store/actions/eventactions'
 import { createLocation } from '../../store/actions/locationactions'
 import EventMenu from './eventMenu'
-import EventSheets from './eventSheets'
 
 class Event extends Component{
 
@@ -50,13 +46,12 @@ class Event extends Component{
     render(){
         const { user,auth } = this.props
         if(auth.isEmpty) return <Redirect to='/signin' />
-        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
-        if(user && user.accessLevel == 'volunteer') return <Redirect to='/' />
+        if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
+        if(user && user.accessLevel === 'volunteer') return <Redirect to='/' />
         
         if(this.state.eventDeleted === true){
             return <Redirect to='/events'/>
         }
-        const currentPath = "/event/" + this.state.id + "/";
         const { event } = this.props
         var eventTab;
         if(this.props.activeItem === 'Info'){

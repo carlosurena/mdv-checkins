@@ -11,7 +11,7 @@ class Checkins extends Component {
   render() {
     const {user, auth} = this.props
     if(auth.isEmpty) return <Redirect to='/signin' />
-    if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
+    if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
     
     return (
       <div className="ui">

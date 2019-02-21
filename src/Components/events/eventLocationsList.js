@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
-import { Button,Card } from 'semantic-ui-react'
+import { Card } from 'semantic-ui-react'
 
 
 class EventLocationsList extends Component {

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import {createMember } from '../../store/actions/memberactions'
-import M from 'materialize-css'
 import {Modal, Button, Form, Dropdown} from 'semantic-ui-react'
 
 class AddMember extends Component {

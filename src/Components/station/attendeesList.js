@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import PersonDetailsModal from './personDetailsModal'
 import { Button } from 'semantic-ui-react'
-import { connect } from 'react-redux';
-import { checkOutAttendee } from '../../store/actions/sheetActions'
 class AttendeesList extends Component {
     state ={
         attendeeData : [],
@@ -23,7 +20,7 @@ class AttendeesList extends Component {
         }
 
         // if a checkout button is clicked, update the attendance sheet
-        if(prevProps.isCheckingOut != this.props.isCheckingOut){
+        if(prevProps.isCheckingOut !== this.props.isCheckingOut){
             this.updateList()
         }
         
@@ -42,7 +39,7 @@ class AttendeesList extends Component {
         
         sheet.attendees ? (sheet.attendees.forEach(attendee => {
             members.find( member => {
-                if(member.id == attendee.attendeeID){
+                if(member.id === attendee.attendeeID){
                     console.log("member matched with attendee ID", member, attendee)
                     member.checkInDate = attendee.checkInDate;
                     member.checkOutDate = attendee.checkOutDate;
@@ -61,7 +58,6 @@ class AttendeesList extends Component {
         //this.updateList()
     }
   render() {
-      const {members,sheet, handleCheckOut} = this.props
       
     return (
       <div>

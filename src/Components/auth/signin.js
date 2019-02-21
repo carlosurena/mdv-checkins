@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import firebase,{auth} from '../../firebase/firebase';
 import {connect} from 'react-redux'
 import {loginGoogle,loginFacebook} from '../../store/actions/authActions'
 import {Redirect} from 'react-router-dom'

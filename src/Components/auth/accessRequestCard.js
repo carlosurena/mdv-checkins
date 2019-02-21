@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Search, Button, Image, Icon } from 'semantic-ui-react'
+import { Button, Image, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
