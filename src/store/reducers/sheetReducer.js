@@ -22,6 +22,12 @@ const sheetReducer = (state = initState, action) => {
         case 'ADD_ATTENDEE_ERROR':
             console.log("There was an error adding an attendee to the sheet", action.err);
             return state;
+        case 'CHECKOUT_ATTENDEE':
+            console.log('attendee checkout successful:', action.attendeeID);
+            return state;
+        case 'CHECKOUT_ATTENDEE_ERROR':
+            console.log("There was an error checking out an attendee", action.err);
+            return state;
         case 'SET_CURRENT_SHEET':
             console.log('current sheet set:', action.data);
             return{

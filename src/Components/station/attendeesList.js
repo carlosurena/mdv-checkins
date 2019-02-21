@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PersonDetailsModal from './personDetailsModal'
 import { Button } from 'semantic-ui-react'
+import { connect } from 'react-redux';
+import { checkOutAttendee } from '../../store/actions/sheetActions'
 class AttendeesList extends Component {
     state ={
         attendeeData : [],
         attendees : [],
+        checkedOut : false
     }
 
     componentDidMount(){
@@ -13,24 +16,36 @@ class AttendeesList extends Component {
     }
 
     componentDidUpdate(prevProps){
-       // console.log(prevProps.sheet,this.props.sheet)
+       
+        console.log("componentDidUpdate triggered", this.state.checkedOut)
+       // if an attendee is added to the sheet, update
         if(prevProps.sheet.attendees.length !== this.props.sheet.attendees.length){
             console.log('discrepancy in size')
             this.updateList()
         }
+
+        if(this.state.checkedOut){
+
+            this.updateList()
+        }
+        
     }
 
     updateList = () => {
         const {sheet,members} = this.props
         //Find Members based on Attendee ID References in Sheet Doc
+        console.log('updating list')
         this.setState({
-            attendeeData : []
+            attendeeData : [],
+            checkedOut : false
         })
+
+        
         
         sheet.attendees ? (sheet.attendees.forEach(attendee => {
             members.find( member => {
                 if(member.id == attendee.attendeeID){
-                    //console.log("member matched with attendee ID", member, attendee)
+                    console.log("member matched with attendee ID", member, attendee)
                     member.checkInDate = attendee.checkInDate;
                     member.checkOutDate = attendee.checkOutDate;
                     this.setState(prevState => ({
@@ -40,8 +55,14 @@ class AttendeesList extends Component {
             })
         })) :(console.log('no attendees checked in for this sheet.'));
     }
+
+    checkOut = (attendee) => {
+        this.setState({ checkedOut : true})
+        this.props.handleCheckOut(attendee)
+        //this.updateList()
+    }
   render() {
-      const {members,sheet} = this.props
+      const {members,sheet, handleCheckOut} = this.props
       
     return (
       <div>
@@ -72,7 +93,7 @@ class AttendeesList extends Component {
                                             (new Date(attendee.checkOutDate.toDate()).toLocaleString().split(",")[1])
                                         ) : 
                                         (
-                                            <Button negative>Check out</Button>
+                                            <Button negative onClick={() => this.checkOut(attendee)}>Check out</Button>
                                         )
                                     }</td>
                                 
@@ -87,4 +108,4 @@ class AttendeesList extends Component {
   }
 }
 
-export default AttendeesList
+export default (AttendeesList)

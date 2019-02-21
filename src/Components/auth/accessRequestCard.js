@@ -39,11 +39,11 @@ class AccessRequestCard extends Component {
         const { request, user, members } = this.props;
         const {member} = this.state;
         return (
-            ((request && user) && (
+            ((request && user) ? (
                 <div key={request.id} className="ui segment grid">
                     <div className="ui row centered">
                         A new account needs to be linked to a person in your database.
-            </div>
+                    </div>
                     <div className="ui row two columns">
                         <div className="column ui segment">
                             <div>
@@ -104,7 +104,13 @@ class AccessRequestCard extends Component {
                     </div>
 
                 </div>
-            ))
+            ):
+            (
+                <div>
+                    did not find a match for this user in the database. 
+                </div>
+            )
+            )
 
 
         )
