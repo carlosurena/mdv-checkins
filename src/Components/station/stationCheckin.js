@@ -27,6 +27,7 @@ class StationCheckin extends Component {
         const { eventID,locationID,user} = this.props
         this.props.getTodaySheetFromSelection(eventID,locationID,user)
     }
+
     handleViewSheet = () => {
         this.setState( prevState => ({
             viewSheet : !(prevState.viewSheet)
@@ -46,7 +47,7 @@ class StationCheckin extends Component {
     
 
   render() {
-    const { sheets, currentDate, members, currentSheet } = this.props
+    const { sheets, currentDate, members, currentSheet, isCheckingOut } = this.props
     return (
       <div className="column">
         {
@@ -67,7 +68,7 @@ class StationCheckin extends Component {
                     </div>
                     <div className="column stretched">
                         {this.state.viewSheet && (
-                            <AttendeesList handleCheckOut={(attendee) =>{this.handleCheckOut(attendee)} } members={members} sheet={currentSheet}/>
+                            <AttendeesList handleCheckOut={(attendee) =>{this.handleCheckOut(attendee)} } isCheckingOut= {isCheckingOut} members={members} sheet={currentSheet}/>
 
                         )}
                     </div>
@@ -94,7 +95,8 @@ const mapStateToProps = (reduxState) => {
         sheets : reduxState.firestore.ordered.sheets,
         currentSheet : reduxState.sheet.currentSheet,
         user : reduxState.firebase.auth,
-        members : reduxState.firestore.ordered.members
+        members : reduxState.firestore.ordered.members,
+        isCheckingOut : reduxState.sheet.isCheckingOut
     }
 }
 

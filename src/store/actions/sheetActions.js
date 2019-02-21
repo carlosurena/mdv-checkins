@@ -232,6 +232,7 @@ export const getSheetsFromLocation = (locationRef,eventRef) => {
 export const checkOutAttendee = (sheetID, attendeeID) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         //make async call to database
+        dispatch({ type: 'START_CHECKOUT'});
         console.log("checking out: ",sheetID,attendeeID)
         
         const firestore = getFirestore();

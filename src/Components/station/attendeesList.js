@@ -7,8 +7,7 @@ import { checkOutAttendee } from '../../store/actions/sheetActions'
 class AttendeesList extends Component {
     state ={
         attendeeData : [],
-        attendees : [],
-        checkedOut : false
+        attendees : []
     }
 
     componentDidMount(){
@@ -17,17 +16,17 @@ class AttendeesList extends Component {
 
     componentDidUpdate(prevProps){
        
-        console.log("componentDidUpdate triggered", this.state.checkedOut)
        // if an attendee is added to the sheet, update
         if(prevProps.sheet.attendees.length !== this.props.sheet.attendees.length){
             console.log('discrepancy in size')
             this.updateList()
         }
 
-        if(this.state.checkedOut){
-
+        // if a checkout button is clicked, update the attendance sheet
+        if(prevProps.isCheckingOut != this.props.isCheckingOut){
             this.updateList()
         }
+        
         
     }
 
@@ -36,9 +35,8 @@ class AttendeesList extends Component {
         //Find Members based on Attendee ID References in Sheet Doc
         console.log('updating list')
         this.setState({
-            attendeeData : [],
-            checkedOut : false
-        })
+            attendeeData : []
+                })
 
         
         
@@ -54,10 +52,11 @@ class AttendeesList extends Component {
                 }
             })
         })) :(console.log('no attendees checked in for this sheet.'));
+
+        
     }
 
     checkOut = (attendee) => {
-        this.setState({ checkedOut : true})
         this.props.handleCheckOut(attendee)
         //this.updateList()
     }
@@ -93,7 +92,13 @@ class AttendeesList extends Component {
                                             (new Date(attendee.checkOutDate.toDate()).toLocaleString().split(",")[1])
                                         ) : 
                                         (
-                                            <Button negative onClick={() => this.checkOut(attendee)}>Check out</Button>
+                                            (this.props.isCheckingOut) ? 
+                                            (
+                                                <Button negative disabled loading>Check out</Button>
+                                            ) :
+                                            (
+                                                <Button negative onClick={() => this.checkOut(attendee)}>Check out</Button>
+                                            )
                                         )
                                     }</td>
                                 

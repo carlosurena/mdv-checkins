@@ -1,7 +1,8 @@
 const initState = {
     sheets: [
     ],
-    currentSheet:null
+    currentSheet:null,
+    isCheckingOut : false
 
 };
 
@@ -22,9 +23,17 @@ const sheetReducer = (state = initState, action) => {
         case 'ADD_ATTENDEE_ERROR':
             console.log("There was an error adding an attendee to the sheet", action.err);
             return state;
+        case 'START_CHECKOUT':
+        return{
+            ...state,
+            isCheckingOut: true
+        }        
         case 'CHECKOUT_ATTENDEE':
             console.log('attendee checkout successful:', action.attendeeID);
-            return state;
+            return{
+                ...state,
+                isCheckingOut: false
+            }   
         case 'CHECKOUT_ATTENDEE_ERROR':
             console.log("There was an error checking out an attendee", action.err);
             return state;
