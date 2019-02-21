@@ -92,12 +92,17 @@ class AttendeesList extends Component {
                                             (new Date(attendee.checkOutDate.toDate()).toLocaleString().split(",")[1])
                                         ) : 
                                         (
-                                            (this.props.isCheckingOut) ? 
+                                            (this.props.handleCheckOut) ? (
+                                                (this.props.isCheckingOut) ? 
+                                                (
+                                                    <Button negative disabled loading>Check out</Button>
+                                                ) :
+                                                (
+                                                    <Button negative onClick={() => this.checkOut(attendee)}>Check out</Button>
+                                                )
+                                            ) : 
                                             (
-                                                <Button negative disabled loading>Check out</Button>
-                                            ) :
-                                            (
-                                                <Button negative onClick={() => this.checkOut(attendee)}>Check out</Button>
+                                                <Button negative disabled>Never Checked Out</Button>
                                             )
                                         )
                                     }</td>
