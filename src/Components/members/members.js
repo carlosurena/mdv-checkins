@@ -35,6 +35,8 @@ class Members extends Component {
     const { members, user, auth , requests } = this.props
     if(auth.isEmpty) return <Redirect to='/signin' />
     if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
+    if(user && user.accessLevel == 'volunteer') return <Redirect to='/' />
+
     if(members) console.log('we have '+ members.length +' members')
     return (
       <div className="members-page">

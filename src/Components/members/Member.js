@@ -47,6 +47,8 @@ class Member extends Component{
         const { user, auth } = this.props
         if(auth.isEmpty) return <Redirect to='/signin' />
         if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
+        if(user && user.accessLevel == 'volunteer') return <Redirect to='/' />
+
         if(this.state.eventDeleted === true){
             return <Redirect to='/members'/>
         }
