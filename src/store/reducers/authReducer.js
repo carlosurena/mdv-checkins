@@ -55,6 +55,12 @@ const authReducer = (state = initState, action ) => {
         case 'CREATE_ACCESS_REQUEST':
             console.log('request created')
             return state
+        case 'DENY_PENDING_USER':
+            console.log('Pending user denied:', action.id);
+            return state;
+        case 'DENY_PENDING_USER_ERROR':
+            console.log("There was en error denying a pending user", action.error);
+            return state;
         default:
             return state;
     }

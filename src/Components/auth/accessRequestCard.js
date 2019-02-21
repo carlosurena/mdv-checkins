@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import SearchRequest from './searchRequest'
-import { linkUser } from '../../store/actions/authActions'
+import { linkUser, denyUser } from '../../store/actions/authActions'
 
 
 class AccessRequestCard extends Component {
@@ -25,7 +25,6 @@ class AccessRequestCard extends Component {
             member: member
         })
 
-
     }
 
     linkProfile = () =>{
@@ -33,6 +32,17 @@ class AccessRequestCard extends Component {
         const { member } = this.state;
         console.log("user and member link :", user, member)
         linkUser(request.userRef,member.id);
+    }
+
+    deletePendingRequest = () =>{
+        //request contains ID, accessLevel, and TimeStamp of creation
+        const { request, user, denyUser} = this.props;
+        const { member } = this.state;
+        console.log("REQUEST IS: ", request)
+        console.log("denying user: ", user)
+        //Only gets called for denying pending users, passing id of pending user
+        denyUser(request.id);
+
     }
 
     render() {
@@ -95,7 +105,7 @@ class AccessRequestCard extends Component {
                                 <div className="ui buttons">
                                     <Button disabled>Link</Button>
                                     <div className="or"></div>
-                                    <Button negative>Deny</Button>
+                                    <Button negative onClick={this.deletePendingRequest}>Deny</Button>
                                 </div>
 
                             )}
@@ -122,7 +132,8 @@ const mapStateToProps = (reduxState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        linkUser : (user,member) => dispatch(linkUser(user,member))
+        linkUser : (user,member) => dispatch(linkUser(user,member)),
+        denyUser : (penRef) => dispatch(denyUser(penRef))
     }
 }
 export default compose(

@@ -214,3 +214,21 @@ export const linkUser = (userRef, memberRef) => {
 
     }
 }
+
+export const denyUser = (penRef) => {
+    console.log("DENYING PENDING USER: ", penRef)  //penRef == doc ID of pending user
+
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+
+        console.log("HELLO");
+
+        const firestore = getFirestore();
+
+        firestore.collection('requests').doc(penRef).delete().then( () => {
+            dispatch({ type: 'DENY_PENDING_USER', penRef});
+        }).catch( (err) =>{
+            dispatch({ type: 'DENY_PENDING_USER_ERROR', err});
+        }) 
+    }
+}
