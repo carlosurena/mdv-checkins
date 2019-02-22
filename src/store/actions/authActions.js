@@ -224,7 +224,8 @@ export const denyUser = (penRef) => {
         console.log("HELLO");
 
         const firestore = getFirestore();
-
+        
+        //Delete document from requests collection
         firestore.collection('requests').doc(penRef).delete().then( () => {
             dispatch({ type: 'DENY_PENDING_USER', penRef});
         }).catch( (err) =>{

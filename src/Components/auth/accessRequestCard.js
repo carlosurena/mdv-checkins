@@ -48,6 +48,7 @@ class AccessRequestCard extends Component {
     render() {
         const { request, user, members } = this.props;
         const {member} = this.state;
+        //These are the 4 requests
         return (
             ((request && user) && (
                 <div key={request.id} className="ui segment grid">

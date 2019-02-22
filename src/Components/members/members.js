@@ -9,8 +9,11 @@ import {Redirect} from 'react-router-dom'
 import { updateMembersList } from '../../store/actions/memberactions'
 import { Button } from 'semantic-ui-react'
 import AccessRequests from '../auth/accessRequests'
+import { getFirestore } from 'redux-firestore';
+import { request } from 'http';
 class Members extends Component {
   state = {
+    requestsIsEmpty: true,
     viewRequests : false
   }
   componentDidMount() {
@@ -33,29 +36,42 @@ class Members extends Component {
 
   render() {
     const { members, user, auth , requests } = this.props
+
     if(auth.isEmpty) return <Redirect to='/signin' />
     if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
     if(members) console.log('we have '+ members.length +' members')
+
+    //Only render pending user UI warning message if requests is populated with pending users
+    if(requests) console.log("Pending users: " + requests.length);
+    if(requests && requests.length > 0) this.state.requestsIsEmpty = false;
+
     return (
       <div className="members-page">
         
           <div className="ui teal inverted segment">
             <AddMember />
           </div>
-        
 
         { (!this.state.viewRequests) ? 
         (
         <div className="ui centered grid container">
           <div className="sixteen wide column ">
+          { (!this.state.requestsIsEmpty) ? 
+          (
             <a onClick={() => this.setState({ viewRequests: true})}><div className="ui warning message">
                 <div className="header">
                   You have pending access level requests.
                 </div>
                 <p>Please click here to review them.</p>
               </div>
+              <div className="ui divider"></div>
             </a>
-            <div className="ui divider"></div>
+           ) 
+           :
+           ( 
+            console.log("REQUESTS IS EMPTY")
+           )
+          }
             <SearchMember members={members} />
             <div className="ui hidden divider"></div>
             <MembersTable  members={members} />
@@ -106,3 +122,5 @@ export default compose(
     { collection : 'requests'}
   ])
 )(Members);
+
+
