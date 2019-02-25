@@ -180,7 +180,9 @@ export const loadUser = () => {
     }
 }
 
-export const linkUser = (userRef, memberRef) => {
+export const linkUser = (userRef, memberRef, penRef) => {
+    console.log("NEED TO DELETE: ", penRef);
+
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         //make async call to database
 
@@ -202,10 +204,21 @@ export const linkUser = (userRef, memberRef) => {
             userRef : userRef,
             updatedOn : new Date()
         }).then( () => {
-            requestRef.get().then( (docs) =>{
-                const data = docs.docs[0].data()
-                console.log('request to delete ', data)
-            })
+            //deleting pending notification after linking
+            // requestRef.get().then( (docs) =>{
+            //     //const data = docs.docs[0].data()
+            //     const data = doc(penRef).delete;
+            //     console.log('Pending request to delete after linking ', data)
+            // })
+
+
+            //Delete document from requests collection
+            firestore.collection('requests').doc(penRef).delete().then( () => {
+                dispatch({ type: 'LINKED_USER_DELETE_PENDING', penRef});
+            }).catch( (err) =>{
+                dispatch({ type: 'LINKED_USER_DELETE_PENDING_ERROR', err});
+            }) 
+
             console.log("user linked in firestore.")
         })
         }

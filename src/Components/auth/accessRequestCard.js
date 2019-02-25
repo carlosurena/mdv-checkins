@@ -31,7 +31,7 @@ class AccessRequestCard extends Component {
         const { request, user, linkUser } = this.props;
         const { member } = this.state;
         console.log("user and member link :", user, member)
-        linkUser(request.userRef,member.id);
+        linkUser(request.userRef, member.id, request.id);
     }
 
     deletePendingRequest = () =>{
@@ -42,7 +42,6 @@ class AccessRequestCard extends Component {
         console.log("denying user: ", user)
         //Only gets called for denying pending users, passing id of pending user
         denyUser(request.id);
-
     }
 
     render() {
@@ -138,7 +137,7 @@ const mapStateToProps = (reduxState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        linkUser : (user,member) => dispatch(linkUser(user,member)),
+        linkUser : (user, member, penRef) => dispatch(linkUser(user,member, penRef)),
         denyUser : (penRef) => dispatch(denyUser(penRef))
     }
 }
