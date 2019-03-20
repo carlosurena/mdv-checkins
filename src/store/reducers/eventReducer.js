@@ -24,6 +24,7 @@ const eventReducer = (state = initState, action) => {
             return state;
         case 'DELETE_EVENT_ERROR':
             console.log("There was an error deleting an event", action.error);
+            return state;
         case 'SET_CURRENT_EVENT':
             console.log('current event set:', action.data);
             return{

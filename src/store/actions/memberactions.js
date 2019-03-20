@@ -28,12 +28,15 @@ export const updateMember = (member) => {
 
         const firestore = getFirestore();
         firestore.collection('members').doc(member.id).update({
-            first_name: member.fname,
-            last_name: member.lname,
-            dob: new Date(member.dob+ " 00:00"),
+            first_name: member.first_name,
+            last_name: member.last_name,
+            dob: member.dob,
             gender: member.gender,
             phone: member.phone,
             type: member.type,
+            email:member.email,
+            allergies: member.allergies,
+            other: member.other,
             updatedOn: new Date()
         }).then( () => {
             dispatch({ type: 'UPDATE_MEMBER', member});
@@ -76,7 +79,6 @@ export const updateMembersList = () => {
         const firestore = getFirestore();
         firestore.collection('members').get().then( (members) =>{
             var data = members.docs.map( doc => {
-                const member = doc.data()
                 return{
                     ...doc.data(),
                     id: doc.id
@@ -98,3 +100,4 @@ export const setActiveMemberMenuItem = (activeItem) => {
 
     }
 }
+

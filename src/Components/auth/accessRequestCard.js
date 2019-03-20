@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Search, Button, Image, Icon } from 'semantic-ui-react'
+import { Button, Image, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
@@ -53,7 +53,7 @@ class AccessRequestCard extends Component {
                 <div key={request.id} className="ui segment grid">
                     <div className="ui row centered">
                         A new account needs to be linked to a person in your database.
-            </div>
+                    </div>
                     <div className="ui row two columns">
                         <div className="column ui segment">
                             <div>
@@ -114,12 +114,14 @@ class AccessRequestCard extends Component {
                     </div>
 
                 </div>
+
             ) :
             (
                 <div>
                     couldn't find a match with this user.
                 </div>
             ))
+
 
 
         )

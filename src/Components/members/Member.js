@@ -1,56 +1,84 @@
 import React, {Component} from 'react';
-import {NavLink, Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
+import {BrowserRouter, Redirect} from 'react-router-dom'
 import MemberStats from './memberstats'
-import { Select,Button } from 'semantic-ui-react'
+import { Button,Icon, Image, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
-import { deleteMember } from '../../store/actions/memberactions';
+import { deleteMember, updateMember } from '../../store/actions/memberactions';
 import MemberMenu from './memberMenu'
 //var db = firebase.firestore();
 class Member extends Component{
 
     state = {
-        id:'',
-        first_name:'',
-        last_name:'',
-        dob:'',
-        gender:'',
-        phone:'',
-        type:'',
-        memberDeleted : false
+        
+        memberDeleted : false,
+        member: {
+            id:'',
+            first_name:'',
+            last_name:'',
+            dob:'',
+            gender:'',
+            phone:'',
+            type:'',
+        }
     }
     componentDidMount(){
-        this.setState({
+       
+        this.setState(prevState => ({
+            member: {
+                ...prevState.member,
+                id: this.props.match.params.member_id
+            }
+        }))
 
-            id: this.props.match.params.member_id
-        })
+        // this.setState({
+        //     member : this.props.member
+        // })
+        console.log("component loaded",this.state.member)
     }
 
-    handleDropdownChange = (e) => {
-        this.setState({
-            [e.target.id]: e.currentTarget.value
-        })
+    componentDidUpdate(prevProps){
+        const { member } = this.props
+        if(prevProps.member == null && member !== null){
+            this.setState(prevState => ({
+                member: {
+                    ...member ,                   
+                    id : prevState.member.id,
+                }
+            }))
+        }
+        
     }
 
     handleDeleteMember = (e) =>{
         console.log('deleting member', this.props);
-        this.props.deleteMember(this.state.id)
+        this.props.deleteMember(this.state.member.id)
             this.setState({
                 memberDeleted: true
             })
-        
-        
-
     }
+
+    handleMemberTypeChange = (e, data) =>{
+        console.log("selection changed",e, data)
+        var memb = this.state.member;
+        memb.type = data.value;
+        this.setState({
+            member : memb
+        })
+        console.log('test', memb)
+        this.props.updateMember(memb)
+
+    } 
     render(){
         const { user, auth } = this.props
         if(auth.isEmpty) return <Redirect to='/signin' />
-        if(user && user.accessLevel == 'pending') return <Redirect to='/pendinguser' />
-        if(this.state.eventDeleted === true){
+        if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
+        if(user && user.accessLevel === 'volunteer') return <Redirect to='/' />
+
+        if(this.state.memberDeleted === true){
             return <Redirect to='/members'/>
         }
-        const currentPath = "/member/" + this.state.id + "/";
         const { member } = this.props
         var memberTab;
         console.log('member tab active item', this.props.activeItem)
@@ -61,15 +89,63 @@ class Member extends Component{
         }else if(this.props.activeItem === 'Reports'){
             memberTab = null
         }
+
+        var memberTypeOptions = [
+            {key: 'Visitor', text: 'Visitor', value: 'Visitor'},
+            {key: 'VisitorInProgress', text: 'Visitor in Progress', value: 'VisitorInProgress'},
+            {key: 'PassiveMember', text: 'Passive Member', value: 'PassiveMember'},
+            {key: 'ActiveMember', text: 'Active Member', value: 'ActiveMember'},
+        ]
         const memberRender = member ? (
             <div className="">
                 <div className="ui inverted teal segment">
-                            <div className="">
-                                <div className="">
-                                    <h3>{member.first_name} {member.last_name}</h3>
+                            <div className="ui center aligned padded grid">
+                                <div className="row">
+                                    <div className="column">
+                                        {
+                                            (member.photoURL ? (
+                                                <Image size='tiny' circular centered src={member.photoURL}></Image>
+                                            ) :
+                                            (
+                                                <Image size='tiny' circular centered src='https://react.semantic-ui.com/images/wireframe/square-image.png'></Image>
+                                            ))
+                                        }
+                                    </div>
                                 </div>
-                                <div className="">
+                                <div className="row">
+                                    <h2>{member.first_name} {member.last_name}</h2>
                                     
+                                </div>
+                                
+                                <div className="row">
+                                    { (member.email) ? (
+                                        <div className="column">
+                                            <Icon name='mail'>
+                                            </Icon>
+                                            {member.email}
+                                        </div>                                    ):
+                                    (
+                                        null
+                                    )}
+                                    { (member.phone) ? (
+                                        <div className="column">
+                                            <Icon flipped='horizontally' name='phone'>
+                                            </Icon>
+                                            {member.phone}
+                                        </div>
+                                    ):
+                                    (
+                                        null
+                                    )}
+                                </div>
+                                <div className="row">
+                                <Dropdown 
+                                    selection 
+                                    defaultValue={member.type}
+                                    options={memberTypeOptions} 
+                                    onChange={this.handleMemberTypeChange}
+                                />
+
                                     <Button negative onClick={this.handleDeleteMember} content='Delete Member' />
                                     
                                 </div> 
@@ -85,7 +161,7 @@ class Member extends Component{
                 
             </div>
         ) : (
-            <div className="">Could not find the requested member: {this.state.id}</div>
+            <div className="">Could not find the requested member: {this.state.member.id}</div>
             )
         return(
             <BrowserRouter>
@@ -102,7 +178,10 @@ const mapStateToProps = (reduxState,ownProps) =>{
     console.log("redux state",reduxState)
     const id = ownProps.match.params.member_id;
     const members = reduxState.firestore.data.members;
-    const member = members ? members[id] : null
+    var member = members ? members[id] : null
+    if(member){
+        member['id'] = id;
+    }
     return {
         member : member,
         auth : reduxState.firebase.auth,
@@ -115,7 +194,8 @@ const mapStateToProps = (reduxState,ownProps) =>{
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        deleteMember: (member) => dispatch(deleteMember(member))
+        deleteMember: (member) => dispatch(deleteMember(member)),
+        updateMember: (member) => dispatch(updateMember(member))
         }
 }
 

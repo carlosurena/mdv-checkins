@@ -187,7 +187,6 @@ export const linkUser = (userRef, memberRef, penRef) => {
         //make async call to database
 
         const firestore = getFirestore();
-        const firebase = getFirebase();
 
         const requestRef = firestore.collection('requests')
                 .where('userRef', '==', userRef)

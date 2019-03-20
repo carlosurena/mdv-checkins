@@ -39,13 +39,13 @@ class Station extends Component {
     }
 
     render(){
-        const { user,members, currentEvent, currentLocation } = this.props
+        const { user, currentEvent, currentLocation } = this.props
         if(user.isEmpty) return <Redirect to='/' />
         return(
             <div className="ui page grid">
                     {currentEvent ? (
                         (currentLocation? (
-                            <StationCheckin event={currentEvent} eventID={currentEvent.id} currentDate={this.state.currentDate} members={this.props.members} locationID={currentLocation.id}/>
+                            <StationCheckin event={currentEvent} eventID={currentEvent.id} currentDate={this.state.currentDate} locationID={currentLocation.id}/>
 
                         ) : (
                             <StationLocationsList handleLocationSelect={ (location) =>{this.handleLocationSelect(location)} } events={this.props.events} event={currentEvent} eventID={currentEvent.id}/>
@@ -66,7 +66,6 @@ const mapStateToProps = (reduxState) =>{
     console.log('reduxstate',reduxState)
     return {
         user : reduxState.firebase.auth,
-        members : reduxState.firestore.ordered.members,
         events: reduxState.firestore.ordered.events,
         locations: reduxState.firestore.ordered.locations,
         currentEvent: reduxState.event.currentEvent,
@@ -93,9 +92,6 @@ export default compose(
     firestoreConnect(props =>[
         {
             collection : 'events'
-        },
-        {
-            collection : 'members'
         }
     ])
     )(Station)

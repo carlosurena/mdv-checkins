@@ -4,9 +4,8 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import StationSearch from './stationSearch'
 import AttendeesList from './attendeesList'
-import { getTodaySheetFromSelection,createSheet, addAttendee, setCurrentSheet, updateCurrentSheet } from '../../store/actions/sheetActions'
+import { getTodaySheetFromSelection, addAttendee, setCurrentSheet, updateCurrentSheet, checkOutAttendee } from '../../store/actions/sheetActions'
 import { Button } from 'semantic-ui-react'
-import AddMember from '../members/addMember'
 
 
 class StationCheckin extends Component {
@@ -27,23 +26,27 @@ class StationCheckin extends Component {
         const { eventID,locationID,user} = this.props
         this.props.getTodaySheetFromSelection(eventID,locationID,user)
     }
+
     handleViewSheet = () => {
         this.setState( prevState => ({
             viewSheet : !(prevState.viewSheet)
         }))
     }
 
-    testBtn = (e) => {
-        //console.log(this.props.currentSheet)
-        //this.props.createSheet(this.props.eventID,this.props.locationID,this.props.user)
-    }
+    
 
-    handleModal = (e) => {
+    handleCheckOut = (attendee) => {
+        const {currentSheet, checkOutAttendee, updateCurrentSheet} = this.props
+        console.log('checking out', currentSheet,attendee)
+        checkOutAttendee(currentSheet.id,attendee.id)
+        updateCurrentSheet()
+
 
     }
     
+
   render() {
-    const { sheets, currentDate, members, currentSheet } = this.props
+    const { members, currentSheet, isCheckingOut } = this.props
     return (
       <div className="column">
         {
@@ -54,7 +57,6 @@ class StationCheckin extends Component {
                     <div className="ui basic segment">
                         <div className="ui one column center aligned grid">
                         <StationSearch addAttendee={ (attendee) =>{this.addAttendee(attendee)} } members={members}/>
-                            <AddMember />
                             <div className="">
                                 <Button onClick={this.handleViewSheet}>{this.state.viewSheet ? ('Hide Attendance Sheet') : ('View Attendance Sheet')}</Button>
                                 <Button >{this.state.viewSheet ? ('Check Me In') : ('Checked In')}</Button>
@@ -65,7 +67,7 @@ class StationCheckin extends Component {
                     </div>
                     <div className="column stretched">
                         {this.state.viewSheet && (
-                            <AttendeesList members={members} sheet={currentSheet}/>
+                            <AttendeesList handleCheckOut={(attendee) =>{this.handleCheckOut(attendee)} } isCheckingOut= {isCheckingOut} members={members} sheet={currentSheet}/>
 
                         )}
                     </div>
@@ -91,7 +93,9 @@ const mapStateToProps = (reduxState) => {
     return{
         sheets : reduxState.firestore.ordered.sheets,
         currentSheet : reduxState.sheet.currentSheet,
-        user : reduxState.firebase.auth
+        user : reduxState.firebase.auth,
+        members : reduxState.firestore.ordered.members,
+        isCheckingOut : reduxState.sheet.isCheckingOut
     }
 }
 
@@ -100,7 +104,9 @@ const mapDispatchToProps = (dispatch) =>{
         addAttendee: (sheet,attendeeID,user) => dispatch(addAttendee(sheet,attendeeID,user)),
         setCurrentSheet: (sheet) => dispatch(setCurrentSheet(sheet)),
         updateCurrentSheet: () => dispatch(updateCurrentSheet()),
-        getTodaySheetFromSelection: (eventRef,locationRef,user) => dispatch(getTodaySheetFromSelection(eventRef,locationRef,user))
+        getTodaySheetFromSelection: (eventRef,locationRef,user) => dispatch(getTodaySheetFromSelection(eventRef,locationRef,user)),
+        checkOutAttendee : (sheet,attendee) => dispatch(checkOutAttendee(sheet,attendee))
+
     }
 }
 
@@ -109,6 +115,10 @@ export default compose(
     firestoreConnect(props => [
         {
             collection: 'sheets'
+            
+        },
+        {
+            collection: 'members'
             
         }
     ])

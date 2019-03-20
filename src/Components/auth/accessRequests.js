@@ -17,7 +17,9 @@ class AccessRequests extends Component {
         {
           (requests && requests.map( (request) =>{
             return (
-              <AccessRequestCard request={request} members={members} />
+              <div key={request.id} >
+                <AccessRequestCard request={request} members={members} />
+              </div>
             )
           }))
         }

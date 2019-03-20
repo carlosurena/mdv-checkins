@@ -212,7 +212,6 @@ export const getSheetsFromLocation = (locationRef,eventRef) => {
 
         sheetRef.get().then( sheets => {
             var data = sheets.docs.map( doc => {
-                const sheet = doc.data()
                 return{
                     ...doc.data(),
                     id: doc.id
@@ -228,3 +227,24 @@ export const getSheetsFromLocation = (locationRef,eventRef) => {
     }
 }
 
+
+export const checkOutAttendee = (sheetID, attendeeID) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        //make async call to database
+        dispatch({ type: 'START_CHECKOUT'});
+        console.log("checking out: ",sheetID,attendeeID)
+        
+        const firestore = getFirestore();
+        //const creatorRef = firestore.collection('users').doc(user.uid)
+        //var eventRef = firestore.collection('events').doc(eventID);
+
+        firestore.collection('sheets').doc(sheetID).collection('attendees').doc(attendeeID).update({
+            checkOutDate: new Date()
+        }).then( () => {
+            dispatch({ type: 'CHECKOUT_ATTENDEE', attendeeID});
+        }).catch( (err) =>{
+            dispatch({ type: 'CHECKOUT_ATTENDEE', err});
+        }) 
+
+    }
+}

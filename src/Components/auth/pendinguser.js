@@ -6,7 +6,7 @@ class PendingUser extends Component {
   render() {
     const {user, auth} = this.props
     if(auth.isEmpty) return <Redirect to='/signin' />
-    if(user && user.accessLevel == 'admin') return <Redirect to='/' />
+    if(user && user.accessLevel === 'admin') return <Redirect to='/' />
     return (
       <div>
         Thank you for signing up. We've sent a notification to your administrators.

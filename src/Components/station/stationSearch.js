@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Search, Label, Button } from 'semantic-ui-react'
-import { connect } from 'react-redux'
+import {Search} from 'semantic-ui-react'
 import _ from 'lodash'
 import faker from 'faker'
-import { Redirect } from 'react-router-dom'
 import AddMember from '../members/addMember'
 
 var source;
@@ -95,7 +93,6 @@ class StationSearch extends Component {
            
         }
   render() {
-      const {addAttendee} = this.props
       if(this.state.toMember){
       }
     const { isLoading, value, results } = this.state

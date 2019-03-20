@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Card} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { setCurrentLocation,resetCurrentLocation} from '../../store/actions/locationactions'

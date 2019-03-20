@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import {createEvent } from '../../store/actions/eventactions'
-import { Modal, Form, Button, Checkbox} from 'semantic-ui-react'
+import { Modal, Form, Button } from 'semantic-ui-react'
 
 class CreateEvent extends Component {
     state = {
@@ -67,19 +67,9 @@ class CreateEvent extends Component {
     }
 
     render(){
-        const eventOptions = [
-            {key: '', text: 'Male', value: 'M'},
-            {key: 'f', text: 'Female', value: 'F'},
-        ]
-
-        const memberOptions = [
-            {key: 'visitor', text: 'Visitor', value: 'Visitor'},
-            {key: 'visitorInProgress', text: 'Visitor in Progress', value: 'VisitorInProgress'},
-            {key: 'passiveMember', text: 'Passive Member', value: 'PassiveMember'},
-            {key: 'activeMember', text: 'Active Member', value: 'ActiveMember'},
 
 
-        ]
+        
         return(
             <div>
             <Button primary onClick={this.openModal}>+ Event</Button>
