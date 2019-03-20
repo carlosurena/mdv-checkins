@@ -17,9 +17,21 @@ class Members extends Component {
     viewRequests : false
   }
   componentDidMount() {
+    const { requests } = this.props;
     this.props.updateMembersList();
     console.log('component remounted')
+    if(requests && requests.length > 0){
+      this.isRequestsEmpty(false)
+    }else{
+      this.isRequestsEmpty(true)
+    }
   }
+
+  isRequestsEmpty = (empty) => {
+    this.setState({
+      requestsIsEmpty : empty
+    })
+  } 
 
   componentDidUpdate(prevProps){
     // console.log(prevProps.sheet,this.props.sheet)
@@ -31,8 +43,11 @@ class Members extends Component {
         //this.updateList()
     }
     }
+    
      
  }
+
+
 
   render() {
     const { members, user, auth , requests } = this.props
@@ -43,7 +58,7 @@ class Members extends Component {
 
     //Only render pending user UI warning message if requests is populated with pending users
     if(requests) console.log("Pending users: " + requests.length);
-    if(requests && requests.length > 0) this.state.requestsIsEmpty = false;
+    
 
     return (
       <div className="members-page">
@@ -56,7 +71,7 @@ class Members extends Component {
         (
         <div className="ui centered grid container">
           <div className="sixteen wide column ">
-          { (!this.state.requestsIsEmpty) ? 
+          { ( requests && requests.length > 0) ? 
           (
             <a onClick={() => this.setState({ viewRequests: true})}><div className="ui warning message">
                 <div className="header">
