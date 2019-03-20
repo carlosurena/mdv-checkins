@@ -9,14 +9,29 @@ import {Redirect} from 'react-router-dom'
 import { updateMembersList } from '../../store/actions/memberactions'
 import { Button } from 'semantic-ui-react'
 import AccessRequests from '../auth/accessRequests'
+import { getFirestore } from 'redux-firestore';
+import { request } from 'http';
 class Members extends Component {
   state = {
+    requestsIsEmpty: true,
     viewRequests : false
   }
   componentDidMount() {
+    const { requests } = this.props;
     this.props.updateMembersList();
     console.log('component remounted')
+    if(requests && requests.length > 0){
+      this.isRequestsEmpty(false)
+    }else{
+      this.isRequestsEmpty(true)
+    }
   }
+
+  isRequestsEmpty = (empty) => {
+    this.setState({
+      requestsIsEmpty : empty
+    })
+  } 
 
   componentDidUpdate(prevProps){
     // console.log(prevProps.sheet,this.props.sheet)
@@ -28,36 +43,52 @@ class Members extends Component {
         //this.updateList()
     }
     }
+    
      
  }
 
+
+
   render() {
     const { members, user, auth , requests } = this.props
+
     if(auth.isEmpty) return <Redirect to='/signin' />
     if(user && user.accessLevel === 'pending') return <Redirect to='/pendinguser' />
     if(user && user.accessLevel === 'volunteer') return <Redirect to='/' />
 
     if(members) console.log('we have '+ members.length +' members')
+
+    //Only render pending user UI warning message if requests is populated with pending users
+    if(requests) console.log("Pending users: " + requests.length);
+    
+
     return (
       <div className="members-page">
         
           <div className="ui teal inverted segment">
             <AddMember />
           </div>
-        
 
         { (!this.state.viewRequests) ? 
         (
         <div className="ui centered grid container">
           <div className="sixteen wide column ">
+          { ( requests && requests.length > 0) ? 
+          (
             <a onClick={() => this.setState({ viewRequests: true})}><div className="ui warning message">
                 <div className="header">
                   You have pending access level requests.
                 </div>
                 <p>Please click here to review them.</p>
               </div>
+              <div className="ui divider"></div>
             </a>
-            <div className="ui divider"></div>
+           ) 
+           :
+           ( 
+            console.log("REQUESTS IS EMPTY")
+           )
+          }
             <SearchMember members={members} />
             <div className="ui hidden divider"></div>
             <MembersTable  members={members} />
@@ -108,3 +139,5 @@ export default compose(
     { collection : 'requests'}
   ])
 )(Members);
+
+

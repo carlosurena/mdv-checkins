@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import SearchRequest from './searchRequest'
-import { linkUser } from '../../store/actions/authActions'
+import { linkUser, denyUser } from '../../store/actions/authActions'
 
 
 class AccessRequestCard extends Component {
@@ -25,19 +25,29 @@ class AccessRequestCard extends Component {
             member: member
         })
 
-
     }
 
     linkProfile = () =>{
         const { request, user, linkUser } = this.props;
         const { member } = this.state;
         console.log("user and member link :", user, member)
-        linkUser(request.userRef,member.id);
+        linkUser(request.userRef, member.id, request.id);
+    }
+
+    deletePendingRequest = () =>{
+        //request contains ID, accessLevel, and TimeStamp of creation
+        const { request, user, denyUser} = this.props;
+        const { member } = this.state;
+        console.log("REQUEST IS: ", request)
+        console.log("denying user: ", user)
+        //Only gets called for denying pending users, passing id of pending user
+        denyUser(request.id);
     }
 
     render() {
         const { request, user, members } = this.props;
         const {member} = this.state;
+        //These are the 4 requests
         return (
             ((request && user) ? (
                 <div key={request.id} className="ui segment grid">
@@ -95,7 +105,7 @@ class AccessRequestCard extends Component {
                                 <div className="ui buttons">
                                     <Button disabled>Link</Button>
                                     <div className="or"></div>
-                                    <Button negative>Deny</Button>
+                                    <Button negative onClick={this.deletePendingRequest}>Deny</Button>
                                 </div>
 
                             )}
@@ -104,13 +114,14 @@ class AccessRequestCard extends Component {
                     </div>
 
                 </div>
-            ):
+
+            ) :
             (
                 <div>
-                    did not find a match for this user in the database. 
+                    couldn't find a match with this user.
                 </div>
-            )
-            )
+            ))
+
 
 
         )
@@ -128,7 +139,8 @@ const mapStateToProps = (reduxState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        linkUser : (user,member) => dispatch(linkUser(user,member))
+        linkUser : (user, member, penRef) => dispatch(linkUser(user,member, penRef)),
+        denyUser : (penRef) => dispatch(denyUser(penRef))
     }
 }
 export default compose(
