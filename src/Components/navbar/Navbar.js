@@ -12,7 +12,7 @@ class Navbar extends Component{
 
     }
     componentDidMount() {
-   
+        console.log('navbar mounted', this.props.user)
     }
     render(){
         const { auth, user } = this.props
@@ -23,6 +23,8 @@ class Navbar extends Component{
             link = <AdminLinks logOut= {this.props.logOut}/>
         }else if(user && user.accessLevel === 'volunteer'){
             link = <VolunteerLinks logOut= {this.props.logOut}/>
+        }else{
+            console.log('no user?')
         }
         return(
             <div>

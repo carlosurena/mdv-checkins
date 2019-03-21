@@ -67,7 +67,7 @@ export const loginGoogle = () => {
 }
 export const loginFacebook = () => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
-        console.log("logging in via Facebook")
+        console.log("logging in via facebook")
 
         const firebase = getFirebase();
         const firestore = getFirestore();
@@ -82,8 +82,8 @@ export const loginFacebook = () => {
 
                 firestore.collection('users').add({
                     accessLevel: 'pending',
-                    first_name: additionalUserInfo.profile.given_name,
-                    last_name: additionalUserInfo.profile.family_name,
+                    first_name: additionalUserInfo.profile.first_name,
+                    last_name: additionalUserInfo.profile.last_name,
                     email: additionalUserInfo.profile.email,
                     photoURL: user.photoURL,
                     phone: user.phoneNumber,
@@ -128,6 +128,7 @@ export const loginFacebook = () => {
                 })
             }
         }).catch((err) => {
+            console.log('the was an error logging in' , err)
             dispatch({ type: 'LOGIN_FACEBOOK_ERROR', err })
         })
     }
@@ -161,9 +162,11 @@ export const loadUser = () => {
                     if (users.docs.length > 0) {
                         const data = users.docs[0].data()
                         console.log("matched existing user: ", data);
-                        dispatch({ type: 'LOGIN_FACEBOOK_SUCCESS', data });
+                        dispatch({ type: 'LOGIN_FACEBOOK_SUCCESS', data }); // issue here
                     } else {
-                        console.log('new user log in', user)
+                        console.log('new user log in', user) // need to create new user doc?
+
+                        
                     }
 
                 })
