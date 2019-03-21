@@ -183,7 +183,7 @@ export const loadUser = () => {
     }
 }
 
-export const linkUser = (userRef, memberRef, penRef) => {
+export const linkUser = (userRef, memberRef, penRef, photoURL) => {
     console.log("NEED TO DELETE: ", penRef);
 
     return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -204,6 +204,7 @@ export const linkUser = (userRef, memberRef, penRef) => {
         }).then( () => {
             firestore.collection('members').doc(memberRef).update({
             userRef : userRef,
+            photoURL : photoURL,
             updatedOn : new Date()
         }).then( () => {
             //deleting pending notification after linking

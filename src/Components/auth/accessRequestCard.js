@@ -31,7 +31,7 @@ class AccessRequestCard extends Component {
         const { request, user, linkUser } = this.props;
         const { member } = this.state;
         console.log("user and member link :", user, member)
-        linkUser(request.userRef, member.id, request.id);
+        linkUser(request.userRef, member.id, request.id, user.photoURL);
     }
 
     deletePendingRequest = () =>{
@@ -139,7 +139,7 @@ const mapStateToProps = (reduxState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) =>{
     return {
-        linkUser : (user, member, penRef) => dispatch(linkUser(user,member, penRef)),
+        linkUser : (user, member, penRef, photoURL) => dispatch(linkUser(user,member, penRef, photoURL)),
         denyUser : (penRef) => dispatch(denyUser(penRef))
     }
 }
