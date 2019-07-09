@@ -27,7 +27,7 @@ class Navbar extends Component{
             console.log('no user?')
         }
         return(
-            <div>
+            <div className="navbar">
                 {
                     auth.isEmpty ? (
                         <SignedOutLinks />

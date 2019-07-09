@@ -15,7 +15,7 @@ class Checkins extends Component {
     
     return (
       <div className="ui">
-          <div className="ui teal inverted segment">
+          <div className="ui green inverted segment">
               <div className="">
                   <Link to="/station"><Button primary>Open a Station</Button></Link>
               </div>

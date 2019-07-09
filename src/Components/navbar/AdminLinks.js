@@ -3,7 +3,7 @@ import {NavLink } from 'react-router-dom'
 
 const AdminLinks = (props) => {
     return(
-            <div className="ui secondary stackable pointing menu">
+            <div className="ui secondary stackable pointing menu ">
                 <div className="right menu">
                     <div className="item"><NavLink to="/">Check-In</NavLink></div>
                     <div className="item"><NavLink to="/members">Members</NavLink></div>

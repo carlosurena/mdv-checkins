@@ -23,7 +23,7 @@ class Events extends Component {
 
         return(
             <div className="">
-                <div className="ui teal inverted segment">
+                <div className="ui green inverted segment">
                     <CreateEvent />
                 </div>
         

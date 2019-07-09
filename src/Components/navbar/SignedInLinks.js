@@ -4,7 +4,7 @@ import {NavLink } from 'react-router-dom'
 const SignedInLinks = (props) => {
     return(
             <div className="ui secondary stackable pointing menu">
-                <div className="right menu">
+                <div className="right menu" style={{height:80}}>
                     <div className="item"><NavLink to="/">Check-In</NavLink></div>
                     <div className="item"><NavLink to="/members">Members</NavLink></div>
                     <div className="item"><NavLink to="/events">Events</NavLink></div>

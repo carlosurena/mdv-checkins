@@ -98,7 +98,7 @@ class Member extends Component{
         ]
         const memberRender = member ? (
             <div className="">
-                <div className="ui inverted teal segment">
+                <div className="ui inverted green segment">
                             <div className="ui center aligned padded grid">
                                 <div className="row">
                                     <div className="column">

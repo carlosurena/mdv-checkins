@@ -65,7 +65,7 @@ class Members extends Component {
     return (
       <div className="members-page">
         
-          <div className="ui teal inverted segment">
+          <div className="ui green inverted segment">
             <AddMember />
           </div>
 

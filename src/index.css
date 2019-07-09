@@ -6,6 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background-color: rgb(245, 245, 245);
 }
 
 code {
@@ -46,4 +48,39 @@ code {
 /* Members Page*/
 
 .members-page {
+}
+
+
+/*Sign-In Page*/
+.center-banner{
+  min-height: 100vh;
+}
+
+.vertical-center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.vertical-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+/*Navbar*/
+.navbar {
+  background-color: white;
+}
+
+/* Colors */
+
+.mdv-primary{
+  background-color: rgb(81, 204, 38);
 }

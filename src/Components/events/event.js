@@ -63,7 +63,7 @@ class Event extends Component{
         }
         const eventRender = event ? (
             <div className="">
-                <div className="ui inverted teal segment">
+                <div className="ui inverted green segment">
                             <div className="">
                                 <div className="">
                                     <h3>{event.title}</h3>
